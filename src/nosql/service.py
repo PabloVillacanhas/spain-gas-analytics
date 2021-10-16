@@ -9,7 +9,7 @@ def find_by_date():
 
 
 def find_last() -> RestResponse:
-    return restresponse_from_dict(raw_collection.find_one())
+    return restresponse_from_dict(raw_collection.find_one(sort=[('Fecha', -1)]))
 
 
 def persist(data: RestResponse):
