@@ -1,11 +1,3 @@
-# To use this code, make sure you
-#
-#     import json
-#
-# and then, to convert JSON from a string, do
-#
-#     result = gasolina_from_dict(json.loads(json_string))
-
 from dataclasses import dataclass
 from typing import Optional, Any, List, TypeVar, Type, Callable, cast
 
@@ -157,20 +149,20 @@ class ListaEESSPrecio:
 
 
 @dataclass
-class Gasolina:
+class RestResponse:
     fecha: Optional[str] = None
     lista_eess_precio: Optional[List[ListaEESSPrecio]] = None
     nota: Optional[str] = None
     resultado_consulta: Optional[str] = None
 
     @staticmethod
-    def from_dict(obj: Any) -> 'Gasolina':
+    def from_dict(obj: Any) -> 'RestResponse':
         assert isinstance(obj, dict)
         fecha = from_union([from_str, from_none], obj.get("Fecha"))
         lista_eess_precio = from_union([lambda x: from_list(ListaEESSPrecio.from_dict, x), from_none], obj.get("ListaEESSPrecio"))
         nota = from_union([from_str, from_none], obj.get("Nota"))
         resultado_consulta = from_union([from_str, from_none], obj.get("ResultadoConsulta"))
-        return Gasolina(fecha, lista_eess_precio, nota, resultado_consulta)
+        return RestResponse(fecha, lista_eess_precio, nota, resultado_consulta)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -181,9 +173,11 @@ class Gasolina:
         return result
 
 
-def gasolina_from_dict(s: Any) -> Gasolina:
-    return Gasolina.from_dict(s)
+def restresponse_from_dict(s: Any) -> RestResponse:
+    return RestResponse.from_dict(s)
 
 
-def gasolina_to_dict(x: Gasolina) -> Any:
-    return to_class(Gasolina, x)
+def restresponse_to_dict(x: RestResponse) -> Any:
+    return to_class(RestResponse, x)
+
+

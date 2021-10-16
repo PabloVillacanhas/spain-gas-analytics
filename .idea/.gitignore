@@ -279,3 +279,8 @@ cython_debug/
 
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,pycharm
+/vcs.xml
+/misc.xml
+/gasolina.iml
+/modules.xml
+/inspectionProfiles/profiles_settings.xml

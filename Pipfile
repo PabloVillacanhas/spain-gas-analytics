@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 xmltodict = "*"
 pymongo = {extras = ["srv"],version = "*"}
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.9.5"
