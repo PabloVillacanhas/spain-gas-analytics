@@ -3,8 +3,10 @@ from src.types import RestResponse
 from datetime import datetime
 import pytz
 
+
 def transform_to_float(value):
     return float(value.replace(',', '.')) if bool(value) else None
+
 
 def transform_to_utc_datetime(value):
     timezone = pytz.timezone("Europe/Madrid")
@@ -29,10 +31,12 @@ def rest_response_to_normalized(data: RestResponse) -> list[GasStation]:
                         transform_to_float(x.precio_gasolina_98_e10),
                         transform_to_float(x.precio_gasolina_95_e5),
                         transform_to_float(x.precio_hidrogeno),
-                        transform_to_utc_datetime(data.fecha))
+                        transform_to_utc_datetime(data.fecha),
+                        x.ideess)
         gas_stations.append(
-            GasStation(x.ideess, x.c_p, x.dirección, x.horario, f'POINT({x.longitud_wgs84}, {x.latitud})', x.margen,
-                       x.id_municipio, x.id_provincia, x.idccaa, x.remisión, x.rótulo, x.tipo_venta,
+            GasStation(x.ideess, x.c_p, x.dirección, x.horario,
+                       f'SRID=4269;POINT({transform_to_float(x.longitud_wgs84)} {transform_to_float(x.latitud)})',
+                       x.margen, x.id_municipio, x.id_provincia, x.idccaa, x.remisión, x.rótulo, x.tipo_venta,
                        transform_to_float(x.bio_etanol),
                        transform_to_float(x.éster_metílico), [prices]))
     return gas_stations

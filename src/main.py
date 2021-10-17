@@ -6,7 +6,7 @@ import logging
 from .nosql.service import find_last, persist as insert_in_mongo
 from .spider.service import fetch
 from .adapters import rest_response_to_normalized, transform_to_utc_datetime
-from .sql.service import persist as insert_in_postgres
+from .sql.service import persist as insert_in_postgres, get
 from datetime import datetime
 import src.config
 
@@ -24,6 +24,10 @@ def fetch_and_persist():
         insert_in_postgres(rest_response_to_normalized(rest_response))
 
 
-fetch_and_persist()
+last_mongo_response = find_last()
+a = rest_response_to_normalized(last_mongo_response)
+insert_in_postgres(a)
+# get(5112)
+# fetch_and_persist()
 
 __name__ == '__main__'

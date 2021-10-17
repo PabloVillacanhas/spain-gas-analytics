@@ -23,15 +23,16 @@ class GasStation(db.Base):
     sale_type = Column(String, nullable=False)
     perc_bioeth = Column(Float, nullable=False)
     perc_metil_ester = Column(Float, nullable=False)
-    prices = relationship("Prices")
+    prices = relationship("Prices", backref='gasstations', lazy='dynamic',
+                          cascade='save-update, merge, delete, delete-orphan')
 
-    def __init__(self, id, cp, direction, labour_data, lat_lng, margin, id_adminzone1, id_adminzone2, id_adminzone3,
+    def __init__(self, id, cp, direction, labour_data, coordinates, margin, id_adminzone1, id_adminzone2, id_adminzone3,
                  remision, name, sale_type, perf_bioeth, perc_metil_ester, prices):
         self.id = id
         self.cp = cp
         self.direction = direction
         self.labour_data = labour_data
-        self.lat_lng = lat_lng
+        self.coordinates = coordinates
         self.margin = margin
         self.id_adminzone1 = id_adminzone1
         self.id_adminzone2 = id_adminzone2
@@ -44,7 +45,7 @@ class GasStation(db.Base):
         self.prices = prices
 
     def __str__(self):
-        return self.nombre
+        return self.name
 
 
 class Prices(db.Base):
@@ -69,7 +70,7 @@ class Prices(db.Base):
 
     def __init__(self, biodiesel, bioethanol, compressed_natgas, liq_natgas, liq_gas_from_oil, diesel_a, diesel_b,
                  diesel_prem, gasoline_95e10, gasoline_95es, gasoline_95esprem, gasoline_98e10, gasoline_98es,
-                 h, date) -> None:
+                 h, date, gasstation_id) -> None:
         self.biodiesel = biodiesel
         self.bioethanol = bioethanol
         self.compressed_natgas = compressed_natgas
@@ -85,6 +86,7 @@ class Prices(db.Base):
         self.gasoline_98e5 = gasoline_98es
         self.h = h
         self.date = date
+        self.gasstation_id = gasstation_id
 
 
 def create_schema():
