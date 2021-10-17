@@ -10,6 +10,9 @@ requests = "*"
 xmltodict = "*"
 pymongo = {extras = ["srv"],version = "*"}
 sqlalchemy = "*"
+geoalchemy2 = "*"
+psycopg2 = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.9.5"

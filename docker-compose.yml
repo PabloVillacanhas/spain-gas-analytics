@@ -1,10 +1,10 @@
 version: '2'
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgis/postgis:latest'
     restart: always
     volumes:
-      - './postgres_data:/var/lib/postgresql/data'
+      - './gasdata:/var/lib/postgresql/data'
     environment:
       - POSTGRES_PASSWORD=password
     ports:

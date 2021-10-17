@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///productos.sqlite')
+engine = create_engine('postgresql://postgres:password@localhost:5432/gas')
 Session = sessionmaker(bind=engine)
 session = Session()
 
