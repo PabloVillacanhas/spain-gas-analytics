@@ -1,6 +1,7 @@
 # Default ignored files
 /workspace.xml
 postgres_data
+__pycache__/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pythonvanilla,pycharm
@@ -285,3 +286,4 @@ cython_debug/
 /gasolina.iml
 /modules.xml
 /inspectionProfiles/profiles_settings.xml
+/dictionaries/situm.xml
