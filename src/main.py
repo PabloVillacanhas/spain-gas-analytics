@@ -21,13 +21,13 @@ def fetch_and_persist():
         logging.info("Fetching remote data given by goverment")
         insert_in_mongo(rest_response)
         logging.info("Persisting in postgres the data")
-        insert_in_postgres(rest_response_to_normalized(rest_response))
 
 
 last_mongo_response = find_last()
-a = rest_response_to_normalized(last_mongo_response)
-insert_in_postgres(a)
-# get(5112)
-# fetch_and_persist()
+# a = rest_response_to_normalized(last_mongo_response)
+# insert_in_postgres(a)
+# d = get(5112)
+# print(d)
+insert_in_postgres(rest_response_to_normalized(last_mongo_response))
 
 __name__ == '__main__'

@@ -13,6 +13,10 @@ sqlalchemy = "*"
 geoalchemy2 = "*"
 psycopg2 = "*"
 pytz = "*"
+flask = "*"
+flask-restful = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
 
 [requires]
 python_version = "3.9.5"

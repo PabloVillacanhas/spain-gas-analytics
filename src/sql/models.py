@@ -25,9 +25,10 @@ class GasStation(db.Base):
     perc_metil_ester = Column(Float, nullable=False)
     prices = relationship("Prices", backref='gasstations', lazy='dynamic',
                           cascade='save-update, merge, delete, delete-orphan')
+    new_prices = []
 
     def __init__(self, id, cp, direction, labour_data, coordinates, margin, id_adminzone1, id_adminzone2, id_adminzone3,
-                 remision, name, sale_type, perf_bioeth, perc_metil_ester, prices):
+                 remision, name, sale_type, perf_bioeth, perc_metil_ester):
         self.id = id
         self.cp = cp
         self.direction = direction
@@ -42,7 +43,6 @@ class GasStation(db.Base):
         self.sale_type = sale_type
         self.perc_bioeth = perf_bioeth
         self.perc_metil_ester = perc_metil_ester
-        self.prices = prices
 
     def __str__(self):
         return self.name
