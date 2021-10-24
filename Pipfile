@@ -16,7 +16,8 @@ pytz = "*"
 flask = "*"
 flask-restful = "*"
 flask-marshmallow = "*"
-marshmallow-sqlalchemy = "*"
+shapely-geojson = "*"
+flask_sqlalchemy = "*"
 
 [requires]
 python_version = "3.9.5"

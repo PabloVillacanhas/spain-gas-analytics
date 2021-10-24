@@ -1,18 +1,20 @@
 from src.sql.models import GasStation
-from .db import session
+from shapely_geojson import Feature, dumps
+from geoalchemy2.shape import to_shape
+from src.app import db
 
 
 def persist(gas_stations: list[GasStation]):
     for idx, gas_station in enumerate(gas_stations):
-        gs = session.query(GasStation).get(gas_station.id)  # will give you either Parent or None
+        gs = db.session.query(GasStation).get(gas_station.id)  # will give you either Parent or None
         if not (gs):
-            session.add(gas_station)
-            session.commit()
+            db.session.add(gas_station)
+            db.session.commit()
             continue
         gs.prices.extend(gas_station.new_prices)
         print(idx, "--",len(gas_stations))
-    session.commit()
+    db.session.commit()
 
 
 def get(gas_station_id):
-    return session.query(GasStation).get(gas_station_id)
+    return db.session.query(GasStation).get(gas_station_id)

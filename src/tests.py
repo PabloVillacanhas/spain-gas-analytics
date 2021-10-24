@@ -1,14 +1,15 @@
 import logging
 
-from .sql.models import create_schema
-from .types import restresponse_from_dict, restresponse_to_dict
 import logging
 from .nosql.service import find_last, persist as insert_in_mongo
 from .spider.service import fetch
 from .adapters import rest_response_to_normalized, transform_to_utc_datetime
 from .sql.service import persist as insert_in_postgres, get
 from datetime import datetime
-import src.config
+
+from .rest.schemas import GasStationSchema
+from flask import jsonify
+from .app import app
 
 
 def fetch_and_persist():
@@ -23,11 +24,9 @@ def fetch_and_persist():
         logging.info("Persisting in postgres the data")
 
 
-last_mongo_response = find_last()
-# a = rest_response_to_normalized(last_mongo_response)
-# insert_in_postgres(a)
-# d = get(5112)
-# print(d)
-insert_in_postgres(rest_response_to_normalized(last_mongo_response))
+with app.app_context():
+    gs = get(300)
+    schema = GasStationSchema()
+    print(jsonify(schema.dump(gs)))
 
 __name__ == '__main__'

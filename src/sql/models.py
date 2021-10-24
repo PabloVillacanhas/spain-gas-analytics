@@ -1,12 +1,15 @@
+from dataclasses import dataclass
 from sqlalchemy.types import Float, Integer, String, DateTime
 from sqlalchemy.schema import Column
 from sqlalchemy.orm import relationship
 from geoalchemy2.types import Geometry
-import src.sql.db as db
+from ..app import db
 from sqlalchemy.sql.schema import ForeignKey
 
 
-class GasStation(db.Base):
+
+@dataclass
+class GasStation(db.Model):
     __tablename__ = 'gasstations'
 
     id = Column(Integer, primary_key=True)
@@ -44,11 +47,9 @@ class GasStation(db.Base):
         self.perc_bioeth = perf_bioeth
         self.perc_metil_ester = perc_metil_ester
 
-    def __str__(self):
-        return self.name
 
-
-class Prices(db.Base):
+@dataclass
+class Prices(db.Model):
     __tablename__ = 'prices'
 
     date = Column(DateTime, nullable=True, primary_key=True)
