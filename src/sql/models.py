@@ -4,7 +4,9 @@ from sqlalchemy.schema import Column
 from sqlalchemy.orm import relationship
 from geoalchemy2.types import Geometry
 from sqlalchemy.sql.schema import ForeignKey
-from src import db
+from . import db
+
+
 
 @dataclass
 class GasStation(db.Model):

@@ -6,7 +6,6 @@ from .spider.service import fetch
 from .adapters import transform_to_utc_datetime, rest_response_to_normalized
 from datetime import datetime
 
-
 def fetch_and_persist():
     logging.debug('Try to fetch and persist')
     last_mongo_response = find_last()
@@ -20,8 +19,5 @@ def fetch_and_persist():
         insert_in_postgres(rest_response_to_normalized(find_last()))
 
 
-insert_in_postgres(rest_response_to_normalized(find_last()))
-
-# fetch_and_persist()
-
-__name__ == '__main__'
+if __name__ == '__main__':
+    fetch_and_persist()

@@ -9,9 +9,9 @@ gas_station_schema = GasStationSchema()
 
 
 class GasStationResource(Resource):
-    def get(self, gs_id):
-        gs = get(gs_id)
-        result = gas_station_schema.dump(gs, many=True)
+    def get(self, gasstation_id):
+        gs = get(gasstation_id)
+        result = gas_station_schema.dump(gs)
         return result
 
 

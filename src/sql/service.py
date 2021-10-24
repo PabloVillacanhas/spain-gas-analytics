@@ -1,5 +1,7 @@
-from src.sql.models import GasStation
-from .. import db
+from sqlalchemy.orm.strategy_options import lazyload
+
+from src.sql.models import GasStation, Prices
+from . import db
 
 
 def persist(gas_stations: list[GasStation]):
@@ -15,4 +17,5 @@ def persist(gas_stations: list[GasStation]):
 
 
 def get(gas_station_id):
-    return db.session.query(GasStation).get(gas_station_id)
+    gs = db.session.query(GasStation).join(Prices).first()
+    return gs
