@@ -15,6 +15,10 @@ def transform_to_utc_datetime(value):
 
 
 def rest_response_to_normalized(data: RestResponse) -> list[GasStation]:
+    """
+
+    :rtype: list[GasStation]
+    """
     gas_stations = []
     for x in data.lista_eess_precio:
         prices = Prices(transform_to_float(x.precio_biodiesel),

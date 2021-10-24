@@ -1,5 +1,5 @@
 from marshmallow import fields
-from ..ext import ma
+from ..extensions import ma
 from ..sql.models import GasStation, Prices
 from shapely_geojson import Feature, dumps
 from geoalchemy2.shape import to_shape

@@ -1,15 +1,10 @@
 import logging
 
-import logging
 from .nosql.service import find_last, persist as insert_in_mongo
+from .sql.service import persist as insert_in_postgres
 from .spider.service import fetch
-from .adapters import rest_response_to_normalized, transform_to_utc_datetime
-from .sql.service import persist as insert_in_postgres, get
+from .adapters import transform_to_utc_datetime, rest_response_to_normalized
 from datetime import datetime
-
-from .rest.schemas import GasStationSchema
-from flask import jsonify
-from .app import app
 
 
 def fetch_and_persist():
@@ -22,11 +17,11 @@ def fetch_and_persist():
         logging.info("Fetching remote data given by goverment")
         insert_in_mongo(rest_response)
         logging.info("Persisting in postgres the data")
+        insert_in_postgres(rest_response_to_normalized(find_last()))
 
 
-with app.app_context():
-    gs = get(300)
-    schema = GasStationSchema()
-    print(jsonify(schema.dump(gs)))
+insert_in_postgres(rest_response_to_normalized(find_last()))
+
+# fetch_and_persist()
 
 __name__ == '__main__'
