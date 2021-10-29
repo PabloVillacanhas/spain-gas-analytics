@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import Api
-from src.extensions import ma, db
+import extensions
 from .resources import gasstations_v1_bp
 
 
@@ -11,8 +11,8 @@ def create_app():
     # app.config.from_object(settings_module)
 
     # Inicializa las extensiones
-    ma.init_app(app)
-    db.init_app(app)
+    extensions.ma.init_app(app)
+    extensions.db.init_app(app)
 
     # Captura todos los errores 404
     Api(app, catch_all_404s=True)

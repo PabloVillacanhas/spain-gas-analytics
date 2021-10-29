@@ -1,5 +1,5 @@
 from src.sql.models import GasStation, Prices
-from src.types import RestResponse
+from src.mytypes import RestResponse
 from datetime import datetime
 import pytz
 
