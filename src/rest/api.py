@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import Api
-from .extensions import ma, db
+from src.extensions import ma, db
 from .resources import gasstations_v1_bp
 
 
