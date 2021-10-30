@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import Api
-import extensions
+from .. import extensions
 from .resources import gasstations_v1_bp
 
 
@@ -32,7 +32,7 @@ def create_app():
 def register_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_exception_error(e):
-        return jsonify({'msg': 'Internal server error'}), 500
+        return jsonify({'msg': 'Internal backend error'}), 500
 
     @app.errorhandler(405)
     def handle_405_error(e):

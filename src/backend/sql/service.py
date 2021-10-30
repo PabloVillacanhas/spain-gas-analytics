@@ -1,6 +1,4 @@
-from sqlalchemy.orm.strategy_options import lazyload
-
-from src.sql.models import GasStation, Prices
+from backend.sql.models import GasStation, Prices
 from . import db
 
 

@@ -18,7 +18,6 @@ class GasStationResource(Resource):
 # class GasStationPricesResource(Resource):
 #     def get(self, id):
 #         films = get(id)
-#
 #         return result
 
 
