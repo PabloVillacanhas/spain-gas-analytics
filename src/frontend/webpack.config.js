@@ -1,0 +1,51 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+	mode: "development",
+	entry: path.join(__dirname, "src", "index.tsx"),
+	devtool: 'inline-source-map',
+	output: {
+		path: path.resolve(__dirname, "../backend/client"),
+		filename: 'main.bundle.js'
+	},
+	module: {
+		rules: [
+			{
+				test: /\.?js$/,
+				exclude: /node_modules/,
+				use: {
+					loader: "babel-loader",
+					options: {
+						presets: ['@babel/preset-env', '@babel/preset-react']
+					}
+				}
+			}, {
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			}, {
+				test: /\.(png|jp(e*)g|svg|gif)$/,
+				use: ['file-loader'],
+			}, {
+				test: /\.s[ac]ss$/i,
+				use: [
+					// Creates `style` nodes from JS strings
+					"style-loader",
+					// Translates CSS into CommonJS
+					"css-loader",
+					// Compiles Sass to CSS
+					"sass-loader",
+				],
+			},
+		]
+	},
+	resolve: {
+		extensions: ['.tsx', '.ts', '.js'],
+	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			template: path.join(__dirname, "src", "index.html"),
+		}),
+	],
+}
