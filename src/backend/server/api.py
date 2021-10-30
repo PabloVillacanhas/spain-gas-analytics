@@ -26,6 +26,10 @@ def create_app():
     # Registra manejadores de errores personalizados
     register_error_handlers(app)
 
+    @app.route("/")
+    def hello_world():
+        return "<p>Hello, World!</p>"
+
     return app
 
 
