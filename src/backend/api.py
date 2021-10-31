@@ -26,7 +26,7 @@ def create_app():
     app.register_blueprint(gasstations_v1_bp)
 
     # Registra manejadores de errores personalizados
-    # register_error_handlers(app)
+    register_error_handlers(app)
 
     @app.route("/")
     def hello_world():
@@ -39,7 +39,7 @@ def register_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_exception_error(e):
         print(e)
-        return jsonify({'msg': 'Internal backend error'}), 500
+        return jsonify({'msg': f'Internal backend error {e}'}), 500
 
     @app.errorhandler(405)
     def handle_405_error(e):

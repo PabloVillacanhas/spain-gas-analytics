@@ -1,3 +1,5 @@
+from marshmallow.decorators import post_dump
+
 from backend.extensions import ma
 from backend.sql.models import GasStation, Prices
 from shapely_geojson import Feature, dumps
@@ -15,12 +17,29 @@ class GeoConverter(ModelConverter):
     })
 
 
-class PricesSchema(ma.SQLAlchemyAutoSchema):
+class BaseSQLAlchemyAutoSchema(ma.SQLAlchemyAutoSchema):
+
+    @post_dump
+    def remove_skip_values(self, data, **kwargs):
+        return {
+            key: value for key, value in data.items()
+            if value is not None
+        }
+
+
+class PricesSchema(BaseSQLAlchemyAutoSchema):
     class Meta:
         model = Prices
 
+    @post_dump
+    def remove_skip_values(self, data, **kwargs):
+        return {
+            key: value for key, value in data.items()
+            if value is not None
+        }
 
-class GasStationSchema(ma.SQLAlchemyAutoSchema):
+
+class GasStationSchema(BaseSQLAlchemyAutoSchema):
     class Meta:
         model = GasStation
         include_fk = True
