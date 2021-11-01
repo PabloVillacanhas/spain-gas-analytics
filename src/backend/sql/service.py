@@ -15,5 +15,12 @@ def persist(gas_stations: list[GasStation]):
 
 
 def get(gas_station_id):
-    gs = db.session.query(GasStation).join(Prices).first()
+    gs = db.session.query(GasStation).join(Prices). \
+        where(GasStation.id == gas_station_id) \
+        .first()
     return gs
+
+
+def get_all():
+    result = db.session.query(GasStation).join(Prices).filter(GasStation.id < 300)
+    return result.all()

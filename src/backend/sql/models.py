@@ -1,33 +1,34 @@
 from dataclasses import dataclass
-from sqlalchemy.types import Float, Integer, String, DateTime
-from sqlalchemy.schema import Column
-from sqlalchemy.orm import relationship
 from geoalchemy2.types import Geometry
-from sqlalchemy.sql.schema import ForeignKey
-from . import db
+from datetime import datetime
 
+from . import db
 
 
 @dataclass
 class GasStation(db.Model):
     __tablename__ = 'gasstations'
 
-    id = Column(Integer, primary_key=True)
-    cp = Column(String, nullable=False)
-    direction = Column(String, nullable=False)
-    labour_data = Column(String, nullable=False)
-    coordinates = Column(Geometry('POINT'))
-    margin = Column(String, nullable=False)
-    id_adminzone1 = Column(Integer, nullable=False)
-    id_adminzone2 = Column(Integer, nullable=False)
-    id_adminzone3 = Column(Integer, nullable=False)
-    remision = Column(String, nullable=False)
-    name = Column(String, nullable=False)
-    sale_type = Column(String, nullable=False)
-    perc_bioeth = Column(Float, nullable=False)
-    perc_metil_ester = Column(Float, nullable=False)
-    prices = relationship("Prices", backref='gasstations', lazy='dynamic',
-                          cascade='save-update, merge, delete, delete-orphan')
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+
+    id = db.Column(db.Integer, primary_key=True)
+    cp = db.Column(db.String, nullable=False)
+    direction = db.Column(db.String, nullable=False)
+    labour_data = db.Column(db.String, nullable=False)
+    coordinates = db.Column(Geometry('POINT'))
+    margin = db.Column(db.String, nullable=False)
+    id_adminzone1 = db.Column(db.Integer, nullable=False)
+    id_adminzone2 = db.Column(db.Integer, nullable=False)
+    id_adminzone3 = db.Column(db.Integer, nullable=False)
+    remision = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    sale_type = db.Column(db.String, nullable=False)
+    perc_bioeth = db.Column(db.Float, nullable=False)
+    perc_metil_ester = db.Column(db.Float, nullable=False)
+    prices = db.relationship("Prices", backref='gasstations', lazy='dynamic')
+    last_price = db.relationship("Prices", lazy='dynamic',
+                                 primaryjoin=f"and_(GasStation.id==Prices.gasstation_id,Prices.date>'{today}')")
+
     new_prices = []
 
     def __init__(self, id, cp, direction, labour_data, coordinates, margin, id_adminzone1, id_adminzone2, id_adminzone3,
@@ -52,22 +53,22 @@ class GasStation(db.Model):
 class Prices(db.Model):
     __tablename__ = 'prices'
 
-    date = Column(DateTime, nullable=True, primary_key=True)
-    gasstation_id = Column(Integer, ForeignKey(GasStation.id), primary_key=True)
-    biodiesel = Column(Float, nullable=True)
-    bioethanol = Column(Float, nullable=True)
-    compressed_natgas = Column(Float, nullable=True)
-    liq_natgas = Column(Float, nullable=True)
-    liq_gas_from_oil = Column(Float, nullable=True)
-    diesel_a = Column(Float, nullable=True)
-    diesel_b = Column(Float, nullable=True)
-    diesel_prem = Column(Float, nullable=True)
-    gasoline_95e10 = Column(Float, nullable=True)
-    gasoline_95e5 = Column(Float, nullable=True)
-    gasoline_95e5prem = Column(Float, nullable=True)
-    gasoline_98e10 = Column(Float, nullable=True)
-    gasoline_98e5 = Column(Float, nullable=True)
-    h = Column(Float, nullable=True)
+    date = db.Column(db.DateTime, nullable=True, primary_key=True)
+    gasstation_id = db.Column(db.Integer, db.ForeignKey(GasStation.id), primary_key=True)
+    biodiesel = db.Column(db.Float, nullable=True)
+    bioethanol = db.Column(db.Float, nullable=True)
+    compressed_natgas = db.Column(db.Float, nullable=True)
+    liq_natgas = db.Column(db.Float, nullable=True)
+    liq_gas_from_oil = db.Column(db.Float, nullable=True)
+    diesel_a = db.Column(db.Float, nullable=True)
+    diesel_b = db.Column(db.Float, nullable=True)
+    diesel_prem = db.Column(db.Float, nullable=True)
+    gasoline_95e10 = db.Column(db.Float, nullable=True)
+    gasoline_95e5 = db.Column(db.Float, nullable=True)
+    gasoline_95e5prem = db.Column(db.Float, nullable=True)
+    gasoline_98e10 = db.Column(db.Float, nullable=True)
+    gasoline_98e5 = db.Column(db.Float, nullable=True)
+    h = db.Column(db.Float, nullable=True)
 
     def __init__(self, biodiesel, bioethanol, compressed_natgas, liq_natgas, liq_gas_from_oil, diesel_a, diesel_b,
                  diesel_prem, gasoline_95e10, gasoline_95es, gasoline_95esprem, gasoline_98e10, gasoline_98es,

@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
 from flask.templating import render_template
@@ -11,6 +13,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_BIND'] = "engine"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/gas'
     # app.config.from_object(settings_module)
+
+    logging.basicConfig()
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
     # Inicializa las extensiones
     extensions.ma.init_app(app)
@@ -29,7 +34,7 @@ def create_app():
     register_error_handlers(app)
 
     @app.route("/")
-    def hello_world():
+    def index():
         return send_from_directory('client', "index.html")
 
     return app

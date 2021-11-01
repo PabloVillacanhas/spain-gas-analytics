@@ -1,4 +1,5 @@
-from marshmallow.decorators import post_dump
+from flask_marshmallow.schema import Schema
+from marshmallow.decorators import post_dump, pre_dump
 
 from backend.extensions import ma
 from backend.sql.models import GasStation, Prices
@@ -31,13 +32,6 @@ class PricesSchema(BaseSQLAlchemyAutoSchema):
     class Meta:
         model = Prices
 
-    @post_dump
-    def remove_skip_values(self, data, **kwargs):
-        return {
-            key: value for key, value in data.items()
-            if value is not None
-        }
-
 
 class GasStationSchema(BaseSQLAlchemyAutoSchema):
     class Meta:
@@ -45,8 +39,11 @@ class GasStationSchema(BaseSQLAlchemyAutoSchema):
         include_fk = True
         model_converter = GeoConverter
 
+    last_price = fields.Nested(PricesSchema, many=True)
     prices = fields.Nested(PricesSchema, many=True)
     coordinates = fields.Method('transform_to_geojson')
 
     def transform_to_geojson(self, obj):
-        return json.loads(dumps(Feature(to_shape(obj.coordinates))))
+        if obj.coordinates:
+            return json.loads(dumps(Feature(to_shape(obj.coordinates))))
+        return []
