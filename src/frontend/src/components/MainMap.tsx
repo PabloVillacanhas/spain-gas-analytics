@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MapboxLayer } from '@deck.gl/mapbox';
 import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
+import { GeoJsonLayer } from '@deck.gl/layers';
 
 interface Props {}
 
@@ -9,9 +10,19 @@ const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
 
 const INITIAL_VIEW_STATE = {
-	longitude: -74.5,
-	latitude: 40,
-	zoom: 9,
+	altitude: 1.5,
+	bearing: 0,
+	height: 936,
+	latitude: 39.997882266594274,
+	longitude: -4.459719935562588,
+	maxPitch: 60,
+	maxZoom: 20,
+	minPitch: 0,
+	minZoom: 0,
+	normalize: undefined,
+	pitch: 0,
+	width: 1033,
+	zoom: 5.67760421641584,
 };
 
 const MainMap = () => {
@@ -20,8 +31,17 @@ const MainMap = () => {
 	const deckRef: React.MutableRefObject<any> = useRef(undefined);
 	const mapRef: React.MutableRefObject<any> = useRef(undefined);
 
+	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
+	const [layers, setLayers] = useState(undefined);
+
 	useEffect(() => {
-		//fetch data
+		fetch('http://localhost:5000/api/v1/gas_stations')
+			.then((response) => {
+				return response.json();
+			})
+			.then((data) => {
+				setResults(data);
+			});
 	}, []);
 
 	const onMapLoad = useCallback(() => {
@@ -38,10 +58,30 @@ const MainMap = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (results) {
+			const layer = new GeoJsonLayer({
+				id: 'geojson-layer',
+				data: {
+					type: 'FeatureCollection',
+					features: results.map((p) => p.coordinates),
+				},
+				pickable: true,
+				stroked: false,
+				filled: true,
+				pointType: 'circle',
+				getFillColor: [160, 0, 180, 200],
+				pointRadiusMinPixels: 3,
+				pointRadiusMaxPixels: 5,
+			});
+			setLayers(layer);
+		}
+	}, [results]);
+
 	return (
 		<DeckGL
 			ref={deckRef}
-			// layers={layers}
+			layers={[layers]}
 			initialViewState={INITIAL_VIEW_STATE}
 			controller={true}
 			onWebGLInitialized={setGLContext}
@@ -50,6 +90,7 @@ const MainMap = () => {
 				stencil: true,
 			}}
 		>
+			<div>{!results && 'Loading'}</div>
 			{glContext && (
 				<StaticMap
 					ref={mapRef}
