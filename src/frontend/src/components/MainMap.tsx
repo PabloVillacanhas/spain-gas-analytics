@@ -40,6 +40,7 @@ const MainMap = () => {
 				return response.json();
 			})
 			.then((data) => {
+				console.log(data.filter((item) => !item.coordinates.geometry));
 				setResults(data);
 			});
 	}, []);
@@ -81,7 +82,7 @@ const MainMap = () => {
 	return (
 		<DeckGL
 			ref={deckRef}
-			layers={[layers]}
+			layers={layers ? [layers] : []}
 			initialViewState={INITIAL_VIEW_STATE}
 			controller={true}
 			onWebGLInitialized={setGLContext}

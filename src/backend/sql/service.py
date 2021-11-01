@@ -22,5 +22,5 @@ def get(gas_station_id):
 
 
 def get_all():
-    result = db.session.query(GasStation).join(Prices).filter(GasStation.id < 300)
+    result = db.session.query(GasStation).join(Prices).filter(GasStation.coordinates != None)
     return result.all()
