@@ -167,7 +167,7 @@ const MainMap = () => {
 	}, [results]);
 
 	return (
-		<div>
+		<div style={{ overflow: 'hidden' }}>
 			{!results && (
 				<div
 					style={{ position: 'absolute', top: '50%', left: '50%', zIndex: 1 }}
@@ -188,11 +188,10 @@ const MainMap = () => {
 				getTooltip={({ object }) => {
 					if (object) {
 						return {
-							html: `<h2>${object.properties.name}</h2><div>${JSON.stringify(
+							html: `<div>${object.properties.name}</div><div>${JSON.stringify(
 								object.properties.prices.diesel_a
-							)}</div>`,
+							)}€</div>`,
 							style: {
-								backgroundColor: '#f00',
 								fontSize: '0.8em',
 							},
 						};
