@@ -34,8 +34,10 @@ const MainMap = () => {
 
 	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
 	const [layers, setLayers] = useState(undefined);
-	const [analitycs, setAnalitycs] =
-		useState<React.SetStateAction<any>>(undefined);
+	const [analitycs, setAnalitycs] = useState<any>({
+		main_diesel_a: 0,
+		standard_deviation_diesel_a: 0,
+	});
 
 	useEffect(() => {
 		fetch('http://localhost:5000/api/v1/gas_stations')
@@ -43,7 +45,6 @@ const MainMap = () => {
 				return response.json();
 			})
 			.then((data) => {
-				// console.log(data.filter((item) => !item.coordinates.geometry));
 				data = data.map((item) => {
 					return {
 						feature: {
@@ -75,73 +76,93 @@ const MainMap = () => {
 		}
 	}, []);
 
-	const getPointColor = (percent) => {
-		const color1 = {
-			r: 21,
-			g: 121,
-			b: 9,
-		};
-		const color2 = {
-			r: 255,
-			g: 0,
-			b: 0,
-		};
-		const resultRed = color1.r + percent * (color2.r - color1.r);
-		const resultGreen = color1.g + percent * (color2.g - color1.g);
-		const resultBlue = color1.b + percent * (color2.b - color1.b);
-		return [160, 0, 180, 200];
+	const getPointColor = (price) => {
+		// console.log(`[price - analitycs.main_diesel_a]`, [
+		// 	price,
+		// 	analitycs.main_diesel_a,
+		// 	analitycs.standard_deviation_diesel_a,
+		// ]);
+		const price_diff = price - analitycs.main_diesel_a;
+		// console.log('price_diff :>> ', price_diff);
+
+		if (
+			price_diff > -analitycs.standard_deviation_diesel_a &&
+			price_diff < analitycs.standard_deviation_diesel_a
+		)
+			return [223, 125, 20];
+		else if (
+			price_diff <= -analitycs.standard_deviation_diesel_a &&
+			price_diff > -analitycs.standard_deviation_diesel_a * 2
+		)
+			return [107, 208, 4];
+		else if (
+			price_diff <= -analitycs.standard_deviation_diesel_a * 2 &&
+			price_diff > -analitycs.standard_deviation_diesel_a * 3
+		)
+			return [71, 208, 3];
+		else if (price_diff <= -analitycs.standard_deviation_diesel_a * 3)
+			return [0, 0, 255];
+		else if (
+			price_diff >= analitycs.standard_deviation_diesel_a &&
+			price_diff < analitycs.standard_deviation_diesel_a * 2
+		)
+			return [255, 72, 0];
+		else if (
+			price_diff >= analitycs.standard_deviation_diesel_a * 2 &&
+			price_diff < analitycs.standard_deviation_diesel_a * 3
+		)
+			return [255, 0, 0];
+		else if (price_diff >= analitycs.standard_deviation_diesel_a * 3)
+			return [0, 0, 0];
 	};
 
 	function getStandardDeviation(array) {
 		const n = array.length;
 		const mean = array.reduce((a, b) => a + b) / n;
-		console.log(
-			Math.sqrt(
-				array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
-			)
-		);
 		return Math.sqrt(
 			array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
 		);
 	}
 
 	useEffect(() => {
-		if (results) {
+		if (analitycs.main_diesel_a) {
 			const layer = new GeoJsonLayer({
 				id: 'geojson-layer',
 				data: {
 					type: 'FeatureCollection',
-					features: results.map((p) => p.feature),
+					features: results
+						.filter((f) => f.feature.properties.prices.diesel_a)
+						.map((p) => p.feature),
 				},
 				pickable: true,
 				stroked: false,
 				filled: true,
 				pointType: 'circle',
-				getFillColor: (d) => getPointColor(d),
+				getFillColor: (d) => getPointColor(d.properties.prices.diesel_a),
+				getLineColor: (d) => getPointColor(d.properties.prices.diesel_a),
 				pointRadiusMinPixels: 3,
 				pointRadiusMaxPixels: 5,
 			});
 			setLayers(layer);
-			console.log(
-				`getStandardDeviation(results.map(f => f.feature.properties.prices.diesel_a))`,
-				getStandardDeviation(
+		}
+	}, [analitycs.main_diesel_a]);
+
+	useEffect(() => {
+		if (results) {
+			setAnalitycs({
+				main_diesel_a:
+					results.reduce((acc, curr) => {
+						if (curr.feature.properties.prices.diesel_a)
+							return (acc += curr.feature.properties.prices.diesel_a);
+						else return acc;
+					}, 0) /
+					results.filter((f) => f.feature.properties.prices.diesel_a).length,
+				standard_deviation_diesel_a: getStandardDeviation(
 					results
 						.filter((f) => f.feature.properties.prices.diesel_a)
 						.map((f) => f.feature.properties.prices.diesel_a)
-				)
-			);
-			// setAnalitycs({
-			// 	diesel_a:
-			// 		results.reduce((acc, curr) => {
-			// 			if (curr.feature.properties.prices.diesel_a)
-			// 				return (acc += curr.feature.properties.prices.diesel_a);
-			// 			else return acc;
-			// 		}, 0) /
-			// 		results.filter((f) => f.feature.properties.prices.diesel_a).length,
-			// 	standard_diesel_a_deviation: getStandardDeviation(
-			// 		results.map((f) => f.feature.properties.prices.diesel_a)
-			// 	),
-			// });
+				),
+			});
 		}
 	}, [results]);
 
@@ -160,7 +181,7 @@ const MainMap = () => {
 				if (object) {
 					return {
 						html: `<h2>${object.properties.name}</h2><div>${JSON.stringify(
-							object.properties.prices
+							object.properties.prices.diesel_a
 						)}</div>`,
 						style: {
 							backgroundColor: '#f00',
