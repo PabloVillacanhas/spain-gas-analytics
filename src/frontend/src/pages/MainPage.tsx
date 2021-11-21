@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Box,
 	CssBaseline,
@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import MainMap from '../components/MainMap';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 interface Props {}
 
@@ -28,7 +29,7 @@ export const MainPage = (props: Props) => {
 			>
 				<Toolbar>
 					<Typography variant='h6' noWrap component='div'>
-						Clipped drawer
+						Spain gas prices dashboard
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -51,6 +52,12 @@ export const MainPage = (props: Props) => {
 								<MapIcon />
 							</ListItemIcon>
 							<ListItemText primary={'Map'} />
+						</ListItem>
+						<ListItem button key={'Analytics'}>
+							<ListItemIcon>
+								<TimelineIcon />
+							</ListItemIcon>
+							<ListItemText primary={'Analytics'} />
 						</ListItem>
 					</List>
 				</Box>
