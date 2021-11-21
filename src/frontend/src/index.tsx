@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
-import MainMap from './components/MainMap';
+import { MainPage } from './pages/MainPage';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<MainMap />
+		<MainPage />
 	</React.StrictMode>,
 	document.getElementById('root')
 );

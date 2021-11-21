@@ -3,9 +3,7 @@ import { MapboxLayer } from '@deck.gl/mapbox';
 import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
-import { debuglog } from 'util';
-
-interface Props {}
+import CircularProgress from '@mui/material/CircularProgress';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -25,6 +23,8 @@ const INITIAL_VIEW_STATE = {
 	width: 1033,
 	zoom: 5.67760421641584,
 };
+
+interface MainMapProps {}
 
 const MainMap = () => {
 	// DeckGL and mapbox will both draw into this WebGL context
@@ -167,44 +167,49 @@ const MainMap = () => {
 	}, [results]);
 
 	return (
-		<DeckGL
-			ref={deckRef}
-			layers={layers ? [layers] : []}
-			initialViewState={INITIAL_VIEW_STATE}
-			controller={true}
-			onWebGLInitialized={setGLContext}
-			glOptions={{
-				/* To render vector tile polygons correctly */
-				stencil: true,
-			}}
-			getTooltip={({ object }) => {
-				if (object) {
-					return {
-						html: `<h2>${object.properties.name}</h2><div>${JSON.stringify(
-							object.properties.prices.diesel_a
-						)}</div>`,
-						style: {
-							backgroundColor: '#f00',
-							fontSize: '0.8em',
-						},
-					};
-				}
-			}}
-		>
-			<div style={{ backgroundColor: 'fff	' }}>{!results && 'Loading'}</div>
-			<div style={{ backgroundColor: 'fff	' }}>
-				{analitycs && JSON.stringify(analitycs)}
-			</div>
-			{glContext && (
-				<StaticMap
-					ref={mapRef}
-					gl={glContext}
-					mapStyle='mapbox://styles/	mapbox/dark-v9'
-					mapboxApiAccessToken={MAPBOX_TOKEN}
-					onLoad={onMapLoad}
-				/>
+		<div>
+			{!results && (
+				<div
+					style={{ position: 'absolute', top: '50%', left: '50%', zIndex: 1 }}
+				>
+					<CircularProgress />
+				</div>
 			)}
-		</DeckGL>
+			<DeckGL
+				ref={deckRef}
+				layers={layers ? [layers] : []}
+				initialViewState={INITIAL_VIEW_STATE}
+				controller={true}
+				onWebGLInitialized={setGLContext}
+				glOptions={{
+					/* To render vector tile polygons correctly */
+					stencil: true,
+				}}
+				getTooltip={({ object }) => {
+					if (object) {
+						return {
+							html: `<h2>${object.properties.name}</h2><div>${JSON.stringify(
+								object.properties.prices.diesel_a
+							)}</div>`,
+							style: {
+								backgroundColor: '#f00',
+								fontSize: '0.8em',
+							},
+						};
+					}
+				}}
+			>
+				{glContext && (
+					<StaticMap
+						ref={mapRef}
+						gl={glContext}
+						mapStyle='mapbox://styles/	mapbox/dark-v9'
+						mapboxApiAccessToken={MAPBOX_TOKEN}
+						onLoad={onMapLoad}
+					/>
+				)}
+			</DeckGL>
+		</div>
 	);
 };
 
