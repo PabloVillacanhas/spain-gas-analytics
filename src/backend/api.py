@@ -2,7 +2,6 @@ import logging
 
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
-from flask.templating import render_template
 from flask_restful import Api
 from backend import extensions
 from .resources import gasstations_v1_bp
@@ -10,7 +9,7 @@ from .resources import gasstations_v1_bp
 
 def create_app():
     app = Flask(__name__, static_url_path="", static_folder='client')
-    app.config['SQLALCHEMY_DATABASE_BIND'] = "engine"
+    app.config['SQLALCHEMY_BINDS'] = {"postgres": 'postgresql://postgres:password@localhost:5432/gas'}
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/gas'
     # app.config.from_object(settings_module)
 

@@ -2,6 +2,7 @@ from sqlalchemy.sql.elements import or_, and_
 
 from backend.sql.models import GasStation, Prices
 from . import db
+from .views import PriceEvolutionView
 
 
 def persist(gas_stations: list[GasStation]):
@@ -24,6 +25,11 @@ def get(gas_station_id):
 
 
 def get_all():
-    result = db.session.query(GasStation).join(Prices)\
+    result = db.session.query(GasStation).join(Prices) \
         .filter(and_(GasStation.coordinates != None, GasStation.prices != None))
+    return result.all()
+
+
+def get_price_evolution():
+    result = db.session.query(PriceEvolutionView)
     return result.all()

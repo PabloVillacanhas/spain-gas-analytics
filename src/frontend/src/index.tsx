@@ -2,11 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
-import { MainPage } from './pages/MainPage';
+import { AppLayout } from './components/AppLayout';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MainMap from './components/MainMap';
+import HomePage from './pages/HomePage';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<MainPage />
+		<BrowserRouter>
+			<Routes>
+				<Route path='/' element={<AppLayout />}>
+					<Route index element={<HomePage />}></Route>
+					<Route path='map' element={<MainMap />}></Route>
+				</Route>
+			</Routes>
+		</BrowserRouter>
 	</React.StrictMode>,
 	document.getElementById('root')
 );
