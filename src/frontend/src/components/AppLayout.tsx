@@ -10,6 +10,7 @@ import {
 	ListItem,
 	ListItemIcon,
 	ListItemText,
+	Container,
 } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import HomeIcon from '@mui/icons-material/Home';
@@ -73,10 +74,12 @@ export const AppLayout = ({}: AppLayoutProps) => {
 					</List>
 				</Box>
 			</Drawer>
-			<Box component='main'>
-				<Toolbar />
-				<Outlet />
-			</Box>
+			<Container maxWidth='xl'>
+				<Box component='main'>
+					<Toolbar />
+					<Outlet />
+				</Box>
+			</Container>
 		</Box>
 	);
 };

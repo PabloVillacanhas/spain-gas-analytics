@@ -48,7 +48,7 @@ const HomePage = () => {
 
 	console.log('analitycs :>> ', analitycs);
 	return (
-		<Container>
+		<Container maxWidth='xl'>
 			<h1>
 				Gas prices on{' '}
 				{Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(new Date())}

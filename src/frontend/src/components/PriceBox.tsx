@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { Box } from '@mui/system';
 import { AxisOptions, Chart, ChartOptions, UserSerie } from 'react-charts';
+import { green, red } from '@mui/material/colors';
+import { useCallback } from 'react';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 type Datum = { x: Date; y: number };
 
@@ -47,7 +51,14 @@ interface PriceDataCardProps {
 }
 
 export default function PriceDataCard(props: PriceDataCardProps) {
-	console.log('data :>> ', props.data[0]);
+	const [diffDays, setDiffDays] = React.useState(1);
+
+	const priceDiff = useCallback(() => {
+		return parseFloat(
+			(props.data[0].data[0].y - props.data[0].data[diffDays].y).toFixed(3)
+		);
+	}, [props.data, diffDays]);
+
 	return (
 		<Box
 			sx={{
@@ -63,18 +74,24 @@ export default function PriceDataCard(props: PriceDataCardProps) {
 			<Box sx={{ color: 'text.primary', fontSize: 34, fontWeight: 'medium' }}>
 				{props.data[0].data[0].y}
 			</Box>
-			<Box
-				sx={{
-					color: 'success.dark',
-					display: 'inline',
-					fontWeight: 'medium',
-					mx: 0.5,
-				}}
-			>
-				{(props.data[0].data[0].y - props.data[0].data[1].y).toFixed(3)}
-			</Box>
-			<Box sx={{ color: 'text.secondary', display: 'inline', fontSize: 12 }}>
-				vs. yesterday
+			<Box sx={{ display: 'flex', alignItems: 'baseline' }}>
+				<Box
+					sx={{
+						color: priceDiff() <= 0 ? green[600] : red[600],
+						fontWeight: 'medium',
+						mx: 0.5,
+					}}
+				>
+					{priceDiff() <= 0 ? (
+						<ArrowDownwardIcon sx={{ color: green[600] }} />
+					) : (
+						<ArrowUpwardIcon sx={{ color: red[600] }} />
+					)}{' '}
+					{priceDiff()}
+				</Box>
+				<Box sx={{ color: 'text.secondary', display: 'inline', fontSize: 12 }}>
+					vs. yesterday
+				</Box>
 			</Box>
 		</Box>
 	);
