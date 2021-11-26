@@ -57,7 +57,6 @@ const MainMap = () => {
 						},
 					};
 				});
-				console.log(`object`, data);
 				setResults(data);
 			});
 	}, []);
@@ -77,13 +76,7 @@ const MainMap = () => {
 	}, []);
 
 	const getPointColor = (price) => {
-		// console.log(`[price - analitycs.main_diesel_a]`, [
-		// 	price,
-		// 	analitycs.main_diesel_a,
-		// 	analitycs.standard_deviation_diesel_a,
-		// ]);
 		const price_diff = price - analitycs.main_diesel_a;
-		// console.log('price_diff :>> ', price_diff);
 
 		if (
 			price_diff > -analitycs.standard_deviation_diesel_a &&

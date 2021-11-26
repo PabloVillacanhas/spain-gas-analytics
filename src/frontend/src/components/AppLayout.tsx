@@ -26,6 +26,7 @@ export const AppLayout = ({}: AppLayoutProps) => {
 	const location = useLocation();
 
 	console.log(`location`, location);
+
 	return (
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />

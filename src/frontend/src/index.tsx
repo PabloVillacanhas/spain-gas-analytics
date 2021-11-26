@@ -42,7 +42,7 @@ ReactDOM.render(
 					<Route path='/' element={<AppLayout />}>
 						<Route index element={<HomePage />}></Route>
 						<Route path='map' element={<MainMap />}></Route>
-						<Route path='analytics' element={<Analytics />}></Route>
+						<Route path='analytics/*' element={<Analytics />}></Route>
 					</Route>
 				</Routes>
 			</BrowserRouter>
