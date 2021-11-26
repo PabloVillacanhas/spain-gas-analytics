@@ -5,6 +5,9 @@ module.exports = {
 	mode: "development",
 	entry: path.join(__dirname, "src", "index.tsx"),
 	devtool: 'inline-source-map',
+	devServer: {
+		historyApiFallback: true,
+	},
 	output: {
 		path: path.resolve(__dirname, "../backend/client"),
 		filename: 'main.bundle.js'

@@ -46,7 +46,6 @@ const HomePage = () => {
 		return [{ label: item, data: dataparsed }];
 	};
 
-	console.log('analitycs :>> ', analitycs);
 	return (
 		<Container maxWidth='xl'>
 			<h1>

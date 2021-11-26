@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainMap from './components/MainMap';
 import HomePage from './pages/HomePage';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { Analytics } from '@mui/icons-material';
+import { Analytics } from './components/Analytics';
 
 const theme = createTheme({
 	palette: {
