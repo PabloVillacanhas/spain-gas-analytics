@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainMap from './components/MainMap';
 import HomePage from './pages/HomePage';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { Analytics } from '@mui/icons-material';
 
 const theme = createTheme({
 	palette: {
@@ -21,6 +22,16 @@ const theme = createTheme({
 			active: '#001E3C',
 		},
 	},
+	components: {
+		MuiLink: {
+			styleOverrides: {
+				root: {
+					textDecoration: 'none',
+					color: '#173A5E',
+				},
+			},
+		},
+	},
 });
 
 ReactDOM.render(
@@ -31,6 +42,7 @@ ReactDOM.render(
 					<Route path='/' element={<AppLayout />}>
 						<Route index element={<HomePage />}></Route>
 						<Route path='map' element={<MainMap />}></Route>
+						<Route path='analytics' element={<Analytics />}></Route>
 					</Route>
 				</Routes>
 			</BrowserRouter>

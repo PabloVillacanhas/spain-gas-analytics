@@ -11,17 +11,21 @@ import {
 	ListItemIcon,
 	ListItemText,
 	Container,
+	Link,
 } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import HomeIcon from '@mui/icons-material/Home';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import { Link, Outlet, Route } from 'react-router-dom';
+import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
 
 interface AppLayoutProps {}
 
 const drawerWidth = 240;
 
 export const AppLayout = ({}: AppLayoutProps) => {
+	const location = useLocation();
+
+	console.log(`location`, location);
 	return (
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
@@ -49,28 +53,44 @@ export const AppLayout = ({}: AppLayoutProps) => {
 				<Toolbar />
 				<Box sx={{ overflow: 'auto' }}>
 					<List>
-						<ListItem button key={'Home'}>
-							<ListItemIcon>
-								<HomeIcon />
-							</ListItemIcon>
-							<Link to='/'>
+						<Link to='/' component={RouterLink}>
+							<ListItem
+								button
+								key={'Home'}
+								selected={location.pathname === '/'}
+							>
+								<ListItemIcon>
+									<HomeIcon />
+								</ListItemIcon>
+
 								<ListItemText primary={'Home'} />
-							</Link>
-						</ListItem>
-						<ListItem button key={'Map'}>
-							<ListItemIcon>
-								<MapIcon />
-							</ListItemIcon>
-							<Link to='/map'>
+							</ListItem>
+						</Link>
+						<Link to='/map' component={RouterLink}>
+							<ListItem
+								button
+								key={'Map'}
+								selected={location.pathname === '/map'}
+							>
+								<ListItemIcon>
+									<MapIcon />
+								</ListItemIcon>
+
 								<ListItemText primary={'Map'} />
-							</Link>
-						</ListItem>
-						<ListItem button key={'Analytics'}>
-							<ListItemIcon>
-								<TimelineIcon />
-							</ListItemIcon>
-							<ListItemText primary={'Analytics'} />
-						</ListItem>
+							</ListItem>
+						</Link>
+						<Link to='/analytics' component={RouterLink}>
+							<ListItem
+								button
+								key={'Analytics'}
+								selected={location.pathname === '/analytics'}
+							>
+								<ListItemIcon>
+									<TimelineIcon />
+								</ListItemIcon>
+								<ListItemText primary={'Analytics'} />
+							</ListItem>
+						</Link>
 					</List>
 				</Box>
 			</Drawer>

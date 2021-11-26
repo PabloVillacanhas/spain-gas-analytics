@@ -1,4 +1,4 @@
-from sqlalchemy.sql.elements import or_, and_
+from sqlalchemy.sql.elements import and_
 
 from backend.sql.models import GasStation, Prices
 from . import db
