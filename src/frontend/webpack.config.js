@@ -10,6 +10,7 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, "../backend/client"),
+		publicPath: '/',
 		assetModuleFilename: 'images/[hash][ext][query]',
 		filename: 'main.bundle.js'
 	},

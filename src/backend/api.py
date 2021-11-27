@@ -55,7 +55,7 @@ def register_error_handlers(app):
 
     @app.errorhandler(404)
     def handle_404_error(e):
-        return jsonify({'msg': 'Not Found error'}), 404
+        return send_from_directory('client', "index.html")
 
     # @app.errorhandler(AppErrorBaseClass)
     # def handle_app_base_error(e):
