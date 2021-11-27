@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Container,
 	Card,
@@ -8,10 +8,8 @@ import {
 	Typography,
 	Link,
 } from '@mui/material';
-import { Link as RouterLink, Outlet, Route, Routes } from 'react-router-dom';
+import { Link as RouterLink, Route, Routes } from 'react-router-dom';
 import { PricesEvolution } from './PricesEvolution';
-
-interface Props {}
 
 export const AnalyticsMenu = (p) => {
 	return (
@@ -36,9 +34,7 @@ export const AnalyticsMenu = (p) => {
 	);
 };
 
-export const Analytics = (props: Props) => {
-	console.log('rendering anal men');
-
+export const Analytics = (props: {}) => {
 	return (
 		<Container maxWidth='xl'>
 			<Routes>

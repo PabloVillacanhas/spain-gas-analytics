@@ -1,11 +1,9 @@
 import { Box, Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import React, { useEffect, useState } from 'react';
-import PriceBox, { AnalitycData } from '../components/PriceBox';
+import PriceBox from '../components/PriceBox';
 
-interface HomePageProps {}
-
-const namesMap = {
+const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
 	bioethanol: 'Bioethanol',
 	compressed_natgas: 'Compressed natgas',
@@ -20,7 +18,6 @@ const namesMap = {
 	liq_gas_from_oil: 'Liquid gas from oil',
 	liq_natgas: 'Liq natgas from oil',
 };
-
 const HomePage = () => {
 	const [analitycs, setAnalitycs] = useState<any>(undefined);
 
@@ -65,7 +62,7 @@ const HomePage = () => {
 									.map((k) => (
 										<PriceBox
 											key={k}
-											title={namesMap[k]}
+											title={carburantsNamesMap[k]}
 											data={adapter(k)}
 										></PriceBox>
 									))}
@@ -79,7 +76,7 @@ const HomePage = () => {
 									.map((k) => (
 										<PriceBox
 											key={k}
-											title={namesMap[k]}
+											title={carburantsNamesMap[k]}
 											data={adapter(k)}
 										></PriceBox>
 									))}
@@ -98,7 +95,7 @@ const HomePage = () => {
 									.map((k) => (
 										<PriceBox
 											key={k}
-											title={namesMap[k]}
+											title={carburantsNamesMap[k]}
 											data={adapter(k)}
 										></PriceBox>
 									))}

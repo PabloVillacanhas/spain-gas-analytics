@@ -1,53 +1,14 @@
 import * as React from 'react';
 import { Box } from '@mui/system';
-import { AxisOptions, Chart, ChartOptions, UserSerie } from 'react-charts';
 import { green, red } from '@mui/material/colors';
 import { useCallback } from 'react';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-
-type Datum = { x: Date; y: number };
-
-export type AnalitycData = Array<{
-	label: string;
-	data: Array<Datum>;
-}>;
-
-interface PriceDataChartProps {
-	data: Array<{ label: string; data: Array<Datum> }>;
-}
-
-const PriceDataChart = (props: PriceDataChartProps) => {
-	const primaryAxis = React.useMemo(
-		(): AxisOptions<Datum> => ({
-			getValue: (datum) => datum.x,
-		}),
-		[]
-	);
-
-	const secondaryAxes = React.useMemo(
-		(): AxisOptions<Datum>[] => [
-			{
-				getValue: (datum) => datum.y,
-			},
-		],
-		[]
-	);
-
-	return (
-		<Chart
-			options={{
-				data: props.data,
-				primaryAxis,
-				secondaryAxes,
-			}}
-		/>
-	);
-};
+import { PriceEvolutionData } from './PriceChart';
 
 interface PriceDataCardProps {
 	title: string;
-	data: AnalitycData;
+	data: PriceEvolutionData;
 }
 
 export default function PriceDataCard(props: PriceDataCardProps) {
