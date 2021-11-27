@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, Route, Routes } from 'react-router-dom';
 import { PricesEvolution } from './PricesEvolution';
+import { PricesComparision } from './PricesComparision';
 
 export const AnalyticsMenu = (p) => {
 	return (
@@ -30,6 +31,22 @@ export const AnalyticsMenu = (p) => {
 					</CardActionArea>
 				</Card>
 			</Link>
+			<Link to='/analytics/prices_comparision' component={RouterLink}>
+				<Card sx={{ maxWidth: 345 }}>
+					<CardActionArea>
+						<CardMedia component='img' height='140' alt='random chart' />
+						<CardContent>
+							<Typography gutterBottom variant='h5' component='div'>
+								Prices comparision
+							</Typography>
+							<Typography variant='body2' color='text.secondary'>
+								See prices of carburants compared with each other in the sanme
+								chart
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
 		</Container>
 	);
 };
@@ -40,6 +57,7 @@ export const Analytics = (props: {}) => {
 			<Routes>
 				<Route path='/' element={<AnalyticsMenu />} />
 				<Route path='prices_evolution' element={<PricesEvolution />} />
+				<Route path='prices_comparision' element={<PricesComparision />} />
 			</Routes>
 		</Container>
 	);

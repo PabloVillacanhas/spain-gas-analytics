@@ -38,7 +38,7 @@ export const PricesEvolution = (props: Props) => {
 			if (curr[type])
 				acc.push({
 					x: new Date(curr.date),
-					y: parseFloat(curr[type].toFixed(3)),
+					y: parseFloat(parseFloat(curr[type]).toFixed(3)),
 				});
 			return acc;
 		}, []);

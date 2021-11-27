@@ -1,7 +1,7 @@
 import React from 'react';
 import { AxisOptions, Chart } from 'react-charts';
 
-type Datum = { x: Date; y: number };
+export type Datum = { x: Date; y: number };
 
 export type PriceEvolutionData = Array<{
 	label: string;
@@ -10,7 +10,7 @@ export type PriceEvolutionData = Array<{
 
 interface PriceChartProps {
 	data: Array<{ label: string; data: Array<Datum> }>;
-	title: string;
+	title?: string;
 }
 
 const PriceChart = (props: PriceChartProps) => {
@@ -31,6 +31,7 @@ const PriceChart = (props: PriceChartProps) => {
 		[]
 	);
 
+	console.log(`props.data`, props.data);
 	return (
 		<div
 			style={{
