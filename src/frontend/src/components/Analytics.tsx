@@ -12,6 +12,9 @@ import { Link as RouterLink, Route, Routes } from 'react-router-dom';
 import { PricesEvolution } from './PricesEvolution';
 import { PricesComparision } from './PricesComparision';
 
+import PricesComparisionImg from '../assets/img/prices_comparision.png';
+import PricesEvolutionImg from '../assets/img/prices_evolution.png';
+
 export const AnalyticsMenu = (p) => {
 	return (
 		<Container maxWidth='xl'>
@@ -19,7 +22,12 @@ export const AnalyticsMenu = (p) => {
 			<Link to='/analytics/prices_evolution' component={RouterLink}>
 				<Card sx={{ maxWidth: 345 }}>
 					<CardActionArea>
-						<CardMedia component='img' height='140' alt='random chart' />
+						<CardMedia
+							component='img'
+							height='140'
+							alt='random chart'
+							src={PricesEvolutionImg}
+						/>
 						<CardContent>
 							<Typography gutterBottom variant='h5' component='div'>
 								Prices evolution
@@ -34,7 +42,12 @@ export const AnalyticsMenu = (p) => {
 			<Link to='/analytics/prices_comparision' component={RouterLink}>
 				<Card sx={{ maxWidth: 345 }}>
 					<CardActionArea>
-						<CardMedia component='img' height='140' alt='random chart' />
+						<CardMedia
+							component='img'
+							height='140'
+							alt='random chart'
+							src={PricesComparisionImg}
+						/>
 						<CardContent>
 							<Typography gutterBottom variant='h5' component='div'>
 								Prices comparision

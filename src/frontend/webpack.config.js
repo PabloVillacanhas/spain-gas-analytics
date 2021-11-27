@@ -10,6 +10,7 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, "../backend/client"),
+		assetModuleFilename: 'images/[hash][ext][query]',
 		filename: 'main.bundle.js'
 	},
 	module: {
@@ -27,10 +28,12 @@ module.exports = {
 				test: /\.tsx?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
-			}, {
-				test: /\.(png|jp(e*)g|svg|gif)$/,
-				use: ['file-loader'],
-			}, {
+			},
+			{
+				test: /\.png/,
+				type: 'asset/resource'
+			}
+			, {
 				test: /\.s[ac]ss$/i,
 				use: [
 					// Creates `style` nodes from JS strings
@@ -48,7 +51,7 @@ module.exports = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: path.join(__dirname, "src", "index.html"),
+			template: path.join(__dirname, "public", "index.html")
 		}),
 	],
 }
