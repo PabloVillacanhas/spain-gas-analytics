@@ -9,8 +9,8 @@ import {
 	Link,
 } from '@mui/material';
 import { Link as RouterLink, Route, Routes } from 'react-router-dom';
-import { PricesEvolution } from './PricesEvolution';
-import { PricesComparision } from './PricesComparision';
+import { PricesEvolution } from '../components/PricesEvolution';
+import { PricesComparision } from '../components/PricesComparision';
 
 import PricesComparisionImg from '../assets/img/prices_comparision.png';
 import PricesEvolutionImg from '../assets/img/prices_evolution.png';

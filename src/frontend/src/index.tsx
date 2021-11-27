@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
-import { AppLayout } from './components/AppLayout';
+import { AppLayout } from './containers/AppLayout';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainMap from './components/MainMap';
 import HomePage from './pages/HomePage';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { Analytics } from './components/Analytics';
+import { Analytics } from './containers/Analytics';
 
 const theme = createTheme({
 	palette: {
