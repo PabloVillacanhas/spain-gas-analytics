@@ -21,15 +21,18 @@ def get(gas_station_id):
     gs = db.session.query(GasStation).join(Prices). \
         where(GasStation.id == gas_station_id) \
         .first()
+    db.session.commit()
     return gs
 
 
 def get_all():
     result = db.session.query(GasStation).join(Prices) \
         .filter(and_(GasStation.coordinates != None, GasStation.prices != None))
+    db.session.commit()
     return result.all()
 
 
 def get_price_evolution():
     result = db.session.query(PriceEvolutionView)
+    db.session.commit()
     return result.all()

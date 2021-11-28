@@ -16,6 +16,7 @@ import {
 import MapIcon from '@mui/icons-material/Map';
 import HomeIcon from '@mui/icons-material/Home';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
 
 interface AppLayoutProps {}
@@ -88,6 +89,18 @@ export const AppLayout = ({}: AppLayoutProps) => {
 									<TimelineIcon />
 								</ListItemIcon>
 								<ListItemText primary={'Analytics'} />
+							</ListItem>
+						</Link>
+						<Link to='/news' component={RouterLink}>
+							<ListItem
+								button
+								key={'News'}
+								selected={location.pathname === '/news'}
+							>
+								<ListItemIcon>
+									<MenuBookIcon />
+								</ListItemIcon>
+								<ListItemText primary={'News'} />
 							</ListItem>
 						</Link>
 					</List>
