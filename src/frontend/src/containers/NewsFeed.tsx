@@ -66,7 +66,6 @@ export const NewsFeed = (props: Props) => {
 		const filtered = feedItems.filter((item) =>
 			/[c|C]arburante|[G|g]asolina|[D|d]i[e|é]sel/.test(item.description)
 		);
-		console.log('filtered :>> ', filtered);
 		setItems(filtered);
 	};
 

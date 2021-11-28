@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Box } from '@mui/system';
-import { green, red } from '@mui/material/colors';
+import { green, red, grey } from '@mui/material/colors';
 import { useCallback } from 'react';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import { PriceEvolutionData } from './PriceChart';
 
 interface PriceDataCardProps {
@@ -38,15 +39,26 @@ export default function PriceDataCard(props: PriceDataCardProps) {
 			<Box sx={{ display: 'flex', alignItems: 'baseline' }}>
 				<Box
 					sx={{
-						color: priceDiff() <= 0 ? green[600] : red[600],
+						color:
+							priceDiff() < 0
+								? green[600]
+								: priceDiff() < 0
+								? red[600]
+								: grey[900],
 						fontWeight: 'medium',
 						mx: 0.5,
 					}}
 				>
-					{priceDiff() <= 0 ? (
-						<ArrowDownwardIcon sx={{ color: green[600] }} />
+					{priceDiff() < 0 ? (
+						<ArrowDownwardIcon
+							sx={{ color: green[600], position: 'relative', top: '5px' }}
+						/>
+					) : priceDiff() < 0 ? (
+						<ArrowUpwardIcon
+							sx={{ color: red[600], position: 'relative', top: '5px' }}
+						/>
 					) : (
-						<ArrowUpwardIcon sx={{ color: red[600] }} />
+						<HorizontalRuleIcon sx={{ position: 'relative', top: '5px' }} />
 					)}{' '}
 					{priceDiff()}
 				</Box>
