@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { Analytics } from './containers/Analytics';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import NewsFeed from './containers/NewsFeed';
 
 const theme = createTheme({
 	palette: {
@@ -46,6 +47,7 @@ ReactDOM.render(
 							<Route index element={<HomePage />}></Route>
 							<Route path='map' element={<MainMap />}></Route>
 							<Route path='analytics/*' element={<Analytics />}></Route>
+							<Route path='news' element={<NewsFeed />}></Route>
 						</Route>
 					</Routes>
 				</BrowserRouter>
