@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
+	Avatar,
 	Button,
 	Card,
 	CardActionArea,
 	CardActions,
 	CardContent,
+	CardHeader,
 	CardMedia,
 	Container,
 	Typography,
 } from '@mui/material';
+import ExpansionNewsIcon from '../assets/img/expansion40x40.jpeg';
 
 interface Props {}
 
@@ -20,6 +23,7 @@ export const NewsFeed = (props: Props) => {
 		| Array<{
 				title: string;
 				description: string;
+				source: string;
 				date: Date;
 				link: string;
 				image: string;
@@ -42,6 +46,7 @@ export const NewsFeed = (props: Props) => {
 		const feed = new window.DOMParser().parseFromString(str, 'text/xml');
 		const nodelist = feed.querySelectorAll('item');
 		const feedItems = Array.from(nodelist).map((el: any) => ({
+			source: 'expansion.com',
 			link: el.querySelector('link').innerHTML,
 			title: el
 				.querySelector('title')
@@ -67,9 +72,16 @@ export const NewsFeed = (props: Props) => {
 
 	return (
 		<Container maxWidth='xl'>
-			<h1>Feed</h1>
+			<h1>RSS Feed</h1>
 			{items?.map((item) => (
 				<Card sx={{ maxWidth: 345 }}>
+					<CardHeader
+						avatar={<Avatar src={ExpansionNewsIcon} />}
+						title={item.source}
+						subheader={new Intl.DateTimeFormat('en-GB', {
+							dateStyle: 'full',
+						}).format(new Date(item.date))}
+					/>
 					<CardActionArea>
 						<CardMedia component='img' height='140' image={item.image} />
 						<CardContent>
