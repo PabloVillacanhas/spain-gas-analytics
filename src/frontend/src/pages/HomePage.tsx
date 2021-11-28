@@ -1,7 +1,8 @@
 import { Box, Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PriceBox from '../components/PriceBox';
+import { useGetPriceEvolutionQuery } from '../services/analytics';
 
 const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
@@ -19,20 +20,10 @@ const carburantsNamesMap = {
 	liq_natgas: 'Liq natgas from oil',
 };
 const HomePage = () => {
-	const [analitycs, setAnalitycs] = useState<any>(undefined);
-
-	useEffect(() => {
-		fetch('http://localhost:5000/api/v1/analytics/prices_evolution')
-			.then((response) => {
-				return response.json();
-			})
-			.then((data) => {
-				setAnalitycs(data);
-			});
-	}, []);
+	const { data, error, isLoading } = useGetPriceEvolutionQuery(null);
 
 	const adapter = (item) => {
-		const dataparsed: Array<any> = analitycs.reduce((acc: any, curr: any) => {
+		const dataparsed: Array<any> = data.reduce((acc: any, curr: any) => {
 			if (curr[item])
 				acc.push({
 					x: new Date(curr.date),
@@ -55,8 +46,8 @@ const HomePage = () => {
 						<h1>Prices</h1>
 						<h2>Diesel</h2>
 						<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-							{analitycs &&
-								Object.keys(analitycs[0])
+							{data &&
+								Object.keys(data[0])
 									.filter((f) => f.includes('diesel'))
 									.sort()
 									.map((k) => (
@@ -69,8 +60,8 @@ const HomePage = () => {
 						</Box>
 						<h2>Gasoline</h2>
 						<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-							{analitycs &&
-								Object.keys(analitycs[0])
+							{data &&
+								Object.keys(data[0])
 									.filter((f) => f.includes('gasoline'))
 									.sort()
 									.map((k) => (
@@ -83,8 +74,8 @@ const HomePage = () => {
 						</Box>
 						<h2>Other</h2>
 						<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-							{analitycs &&
-								Object.keys(analitycs[0])
+							{data &&
+								Object.keys(data[0])
 									.filter(
 										(f) =>
 											!f.includes('gasoline') &&
@@ -105,11 +96,11 @@ const HomePage = () => {
 				<Paper variant='outlined' square>
 					<Container></Container>
 				</Paper>
-				<Paper variant='outlined' square>
+				{/* <Paper variant='outlined' square>
 					<Container>
 						<h1>Gas stations</h1>
 					</Container>
-				</Paper>
+				</Paper> */}
 			</Container>
 		</Container>
 	);

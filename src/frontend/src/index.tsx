@@ -8,6 +8,8 @@ import MainMap from './components/MainMap';
 import HomePage from './pages/HomePage';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Analytics } from './containers/Analytics';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 const theme = createTheme({
 	palette: {
@@ -36,17 +38,19 @@ const theme = createTheme({
 
 ReactDOM.render(
 	<React.StrictMode>
-		<ThemeProvider theme={theme}>
-			<BrowserRouter>
-				<Routes>
-					<Route path='/' element={<AppLayout />}>
-						<Route index element={<HomePage />}></Route>
-						<Route path='map' element={<MainMap />}></Route>
-						<Route path='analytics/*' element={<Analytics />}></Route>
-					</Route>
-				</Routes>
-			</BrowserRouter>
-		</ThemeProvider>
+		<Provider store={store}>
+			<ThemeProvider theme={theme}>
+				<BrowserRouter>
+					<Routes>
+						<Route path='/' element={<AppLayout />}>
+							<Route index element={<HomePage />}></Route>
+							<Route path='map' element={<MainMap />}></Route>
+							<Route path='analytics/*' element={<Analytics />}></Route>
+						</Route>
+					</Routes>
+				</BrowserRouter>
+			</ThemeProvider>
+		</Provider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

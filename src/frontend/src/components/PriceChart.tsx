@@ -31,7 +31,6 @@ const PriceChart = (props: PriceChartProps) => {
 		[]
 	);
 
-	console.log(`props.data`, props.data);
 	return (
 		<div
 			style={{
