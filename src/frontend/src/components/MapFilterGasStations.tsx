@@ -22,11 +22,11 @@ const MenuProps = {
 	},
 };
 
-interface MapFilterParams {
+export interface MapFilterParams {
 	gasType: string;
 	sellType: string[];
 	serviceType: string;
-	open: boolean;
+	// open: boolean;
 }
 
 interface Props {
@@ -38,7 +38,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 		gasType: '',
 		sellType: [],
 		serviceType: '',
-		open: true,
+		// open: true,
 	});
 
 	const handleChange = (event: SelectChangeEvent) => {
@@ -107,7 +107,9 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 					onChange={handleChange}
 				>
 					{['Venta al publico', 'Venta a cooperativistas'].map((i) => (
-						<MenuItem value={i}>{i}</MenuItem>
+						<MenuItem key={i} value={i}>
+							{i}
+						</MenuItem>
 					))}
 				</Select>
 			</FormControl>
