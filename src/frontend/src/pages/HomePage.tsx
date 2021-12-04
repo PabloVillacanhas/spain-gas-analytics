@@ -19,6 +19,7 @@ const carburantsNamesMap = {
 	liq_gas_from_oil: 'Liquid gas from oil',
 	liq_natgas: 'Liq natgas from oil',
 };
+
 const HomePage = () => {
 	const { data, error, isLoading } = useGetPriceEvolutionQuery(null);
 

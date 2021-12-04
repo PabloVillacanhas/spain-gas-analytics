@@ -4,6 +4,7 @@ import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import CircularProgress from '@mui/material/CircularProgress';
+import { MapFilterGasStations } from './MapFilterGasStations';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -40,25 +41,25 @@ const MainMap = () => {
 	});
 
 	useEffect(() => {
-		fetch('http://localhost:5000/api/v1/gas_stations')
-			.then((response) => {
-				return response.json();
-			})
-			.then((data) => {
-				data = data.map((item) => {
-					return {
-						feature: {
-							...item.coordinates,
-							properties: {
-								...item.coordinates.properties,
-								name: item.name,
-								prices: item.last_price[0] || [],
-							},
-						},
-					};
-				});
-				setResults(data);
-			});
+		// fetch('http://localhost:5000/api/v1/gas_stations')
+		// 	.then((response) => {
+		// 		return response.json();
+		// 	})
+		// 	.then((data) => {
+		// 		data = data.map((item) => {
+		// 			return {
+		// 				feature: {
+		// 					...item.coordinates,
+		// 					properties: {
+		// 						...item.coordinates.properties,
+		// 						name: item.name,
+		// 						prices: item.last_price[0] || [],
+		// 					},
+		// 				},
+		// 			};
+		// 		});
+		// 		setResults(data);
+		// 	});
 	}, []);
 
 	const onMapLoad = useCallback(() => {
@@ -160,7 +161,13 @@ const MainMap = () => {
 	}, [results]);
 
 	return (
-		<div style={{ overflow: 'hidden' }}>
+		<div
+			style={{
+				overflow: 'hidden',
+				height: '100%',
+				position: 'relative',
+			}}
+		>
 			{!results && (
 				<div
 					style={{ position: 'absolute', top: '50%', left: '50%', zIndex: 1 }}
@@ -195,11 +202,14 @@ const MainMap = () => {
 					<StaticMap
 						ref={mapRef}
 						gl={glContext}
-						mapStyle='mapbox://styles/	mapbox/dark-v9'
+						mapStyle='mapbox://styles/mapbox/streets-v11'
 						mapboxApiAccessToken={MAPBOX_TOKEN}
 						onLoad={onMapLoad}
 					/>
 				)}
+				<MapFilterGasStations
+					onFilterChange={(filter) => console.log('filter', filter)}
+				></MapFilterGasStations>
 			</DeckGL>
 		</div>
 	);
