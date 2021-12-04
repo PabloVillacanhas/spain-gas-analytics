@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource
 
 from .schemas import GasStationSchema, PricesSchema
-from backend.sql.service import get, get_all, get_price_evolution
+from backend.sql.service import get, get_all, get_price_evolution, get_prices
 
 gasstations_v1_bp = Blueprint('gasstations_v1_0_bp', __name__)
 api = Api(gasstations_v1_bp)
@@ -12,7 +12,7 @@ min_gas_stations_schema = GasStationSchema(many=True,
                                            exclude=['prices', 'id_adminzone1', 'id_adminzone2', 'id_adminzone3', 'cp',
                                                     'perc_metil_ester', 'remision', 'perc_bioeth', 'margin'])
 price_evolution = PricesSchema(many=True)
-
+rawprices = PricesSchema(many=True, exclude=['date'])
 
 class GasStationResource(Resource):
     def get(self, gas_station_id):
@@ -34,7 +34,13 @@ class PriceEvolutionResource(Resource):
         result = price_evolution.dump(gs)
         return result
 
+class PricesResource(Resource):
+    def get(self):
+        gs = get_prices()
+        result = rawprices.dump(gs)
+        return result
 
 api.add_resource(GasStationResource, '/api/v1/gas_stations/<int:gas_station_id>', endpoint='gas_station')
 api.add_resource(GasStationsResource, '/api/v1/gas_stations/', endpoint='gas_stations')
 api.add_resource(PriceEvolutionResource, '/api/v1/analytics/prices_evolution', endpoint='price_evolution')
+api.add_resource(PricesResource, '/api/v1/analytics/prices', endpoint='prices')

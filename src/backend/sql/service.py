@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.sql.elements import and_
 
 from backend.sql.models import GasStation, Prices
@@ -34,5 +36,12 @@ def get_all():
 
 def get_price_evolution():
     result = db.session.query(PriceEvolutionView)
+    db.session.commit()
+    return result.all()
+
+
+def get_prices():
+    result = db.session.query(Prices).filter(
+        Prices.date > datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat())
     db.session.commit()
     return result.all()
