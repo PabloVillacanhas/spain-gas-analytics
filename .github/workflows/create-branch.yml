@@ -35,7 +35,7 @@ jobs:
         with:
           project: ${{ env.PROJECT_BOARD }}
           column: ${{ steps.column.outputs.column-name }}
-          repo-token: ${{ secrets.ORG_PROJECT_TOKEN }}
+          repo-token: ${{ secrets.AUTOMATIZATION_TOKEN }}
   create_issue_branch_job:
     name: "create_issue_branch_job"
     runs-on: ubuntu-latest
