@@ -17,8 +17,6 @@ env:
   ICEBOX_COLUMN_NAME: "To do"
   STARTED_COLUMN_NAME: "In progress"
   BEFORE_REVIEW_COLUMN_NAME: "Waiting on Review"
-  autoCloseIssue: true
-  branchName: tiny
 
 jobs:  
   add-issue-to-project-board:
