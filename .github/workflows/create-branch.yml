@@ -12,7 +12,7 @@ on:
 
 env:
   PROJECT_BOARD: "SpainGasAnalytics"
-  ICEBOX_COLUMN_NAME: "To Do"
+  ICEBOX_COLUMN_NAME: "To do"
   STARTED_COLUMN_NAME: "In Progress"
   BEFORE_REVIEW_COLUMN_NAME: "Waiting on Review"
 
