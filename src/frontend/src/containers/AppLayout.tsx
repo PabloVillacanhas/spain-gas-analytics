@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	Box,
 	CssBaseline,
@@ -18,11 +18,9 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
 
-interface AppLayoutProps {}
-
 const drawerWidth = 240;
 
-export const AppLayout = ({}: AppLayoutProps) => {
+export const AppLayout = () => {
 	const location = useLocation();
 
 	return (
