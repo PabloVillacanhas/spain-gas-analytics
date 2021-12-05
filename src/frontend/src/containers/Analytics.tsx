@@ -14,7 +14,9 @@ import { PricesEvolution } from './PricesEvolution';
 import { PricesComparision } from './PricesComparision';
 import PricesComparisionImg from '../assets/img/prices_comparision.png';
 import PricesEvolutionImg from '../assets/img/prices_evolution.png';
+import PricesDistributionImg from '../assets/img/prices_distribution.png';
 import { PricesDistribution } from './PricesDistribution';
+import { AnalyticsCard } from '../components/AnalyticsCard';
 
 export const AnalyticsMenu = (p) => {
 	return (
@@ -24,75 +26,36 @@ export const AnalyticsMenu = (p) => {
 				<Link
 					to='/analytics/prices_evolution'
 					component={RouterLink}
-					sx={{ margin: '2em' }}
+					sx={{ margin: '2em', flex: '1em' }}
 				>
-					<Card sx={{ maxWidth: 345 }}>
-						<CardActionArea>
-							<CardMedia
-								component='img'
-								height='140'
-								alt='random chart'
-								src={PricesEvolutionImg}
-							/>
-							<CardContent>
-								<Typography gutterBottom variant='h5' component='div'>
-									Prices evolution
-								</Typography>
-								<Typography variant='body2' color='text.secondary'>
-									See prices evolution through the time
-								</Typography>
-							</CardContent>
-						</CardActionArea>
-					</Card>
+					<AnalyticsCard
+						title='Prices evolution'
+						description='See prices evolution through the time'
+						imgSrc={PricesEvolutionImg}
+					></AnalyticsCard>
 				</Link>
 				<Link
 					to='/analytics/prices_comparision'
 					component={RouterLink}
-					sx={{ margin: '2em' }}
+					sx={{ margin: '2em', flex: '1em' }}
 				>
-					<Card sx={{ maxWidth: 345 }}>
-						<CardActionArea>
-							<CardMedia
-								component='img'
-								height='140'
-								alt='random chart'
-								src={PricesComparisionImg}
-							/>
-							<CardContent>
-								<Typography gutterBottom variant='h5' component='div'>
-									Prices comparision
-								</Typography>
-								<Typography variant='body2' color='text.secondary'>
-									See prices of carburants compared with each other in the sanme
-									chart
-								</Typography>
-							</CardContent>
-						</CardActionArea>
-					</Card>
+					<AnalyticsCard
+						title='Prices comparision'
+						description='See prices of carburants compared with each other in the sanme
+						chart'
+						imgSrc={PricesComparisionImg}
+					></AnalyticsCard>
 				</Link>
 				<Link
 					to='/analytics/prices_distribution'
 					component={RouterLink}
-					sx={{ margin: '2em' }}
+					sx={{ margin: '2em', flex: '1em' }}
 				>
-					<Card sx={{ maxWidth: 345 }}>
-						<CardActionArea>
-							<CardMedia
-								component='img'
-								height='140'
-								alt='random chart'
-								// src={PricesDistributionImg}
-							/>
-							<CardContent>
-								<Typography gutterBottom variant='h5' component='div'>
-									Prices distribution
-								</Typography>
-								<Typography variant='body2' color='text.secondary'>
-									See the distribution of prices
-								</Typography>
-							</CardContent>
-						</CardActionArea>
-					</Card>
+					<AnalyticsCard
+						title='Prices distribution'
+						description='See the distribution of prices'
+						imgSrc={PricesDistributionImg}
+					></AnalyticsCard>
 				</Link>
 			</Box>
 		</Container>
