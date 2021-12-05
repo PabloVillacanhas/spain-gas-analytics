@@ -18,7 +18,7 @@ env:
 
 jobs:  
   add-issue-to-project-board:
-    name: "add issue to project board"
+    name: "Add issue to project"
     runs-on: ubuntu-latest
     if: github.event.action == 'opened' || github.event.action == 'assigned'
     steps:
@@ -37,7 +37,7 @@ jobs:
           column: ${{ steps.column.outputs.column-name }}
           repo-token: ${{ secrets.AUTOMATIZATION_TOKEN }}
   create_issue_branch_job:
-    name: "create_issue_branch_job"
+    name: "Create branch for issue"
     runs-on: ubuntu-latest
     steps:
       - name: Create Issue Branch
