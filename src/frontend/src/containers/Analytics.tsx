@@ -14,6 +14,7 @@ import { PricesEvolution } from './PricesEvolution';
 import { PricesComparision } from './PricesComparision';
 import PricesComparisionImg from '../assets/img/prices_comparision.png';
 import PricesEvolutionImg from '../assets/img/prices_evolution.png';
+import { PricesDistribution } from './PricesDistribution';
 
 export const AnalyticsMenu = (p) => {
 	return (
@@ -69,6 +70,30 @@ export const AnalyticsMenu = (p) => {
 						</CardActionArea>
 					</Card>
 				</Link>
+				<Link
+					to='/analytics/prices_distribution'
+					component={RouterLink}
+					sx={{ margin: '2em' }}
+				>
+					<Card sx={{ maxWidth: 345 }}>
+						<CardActionArea>
+							<CardMedia
+								component='img'
+								height='140'
+								alt='random chart'
+								// src={PricesDistributionImg}
+							/>
+							<CardContent>
+								<Typography gutterBottom variant='h5' component='div'>
+									Prices distribution
+								</Typography>
+								<Typography variant='body2' color='text.secondary'>
+									See the distribution of prices
+								</Typography>
+							</CardContent>
+						</CardActionArea>
+					</Card>
+				</Link>
 			</Box>
 		</Container>
 	);
@@ -81,6 +106,7 @@ export const Analytics = (props: {}) => {
 				<Route path='/' element={<AnalyticsMenu />} />
 				<Route path='prices_evolution' element={<PricesEvolution />} />
 				<Route path='prices_comparision' element={<PricesComparision />} />
+				<Route path='prices_distribution' element={<PricesDistribution />} />
 			</Routes>
 		</Container>
 	);
