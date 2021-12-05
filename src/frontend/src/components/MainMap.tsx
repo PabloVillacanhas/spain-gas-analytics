@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { carburantsNamesMap } from '../constants';
+import { useGeolocation } from '../hooks';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -34,6 +35,8 @@ const MainMap = () => {
 	const [glContext, setGLContext] = useState();
 	const deckRef: React.MutableRefObject<any> = useRef(undefined);
 	const mapRef: React.MutableRefObject<any> = useRef(undefined);
+
+	const { geolocationPosition } = useGeolocation();
 
 	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
 	const [filter, setFilter] = useState<MapFilterParams | undefined>({
@@ -136,9 +139,6 @@ const MainMap = () => {
 
 	useEffect(() => {
 		if (analitycs && filter) {
-			console.log('results :>> ', results);
-			console.log([results[0].feature.properties.prices, filter.gasType]);
-
 			const newLayerProps = {
 				data: {
 					type: 'FeatureCollection',
@@ -198,7 +198,16 @@ const MainMap = () => {
 			<DeckGL
 				ref={deckRef}
 				layers={[new GeoJsonLayer(layerProps)]}
-				initialViewState={INITIAL_VIEW_STATE}
+				initialViewState={{
+					...INITIAL_VIEW_STATE,
+					...(geolocationPosition
+						? {
+								longitude: geolocationPosition.coords.longitude,
+								latitude: geolocationPosition.coords.latitude,
+								zoom: 12,
+						  }
+						: {}),
+				}}
 				controller={true}
 				onWebGLInitialized={setGLContext}
 				glOptions={{

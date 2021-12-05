@@ -1,8 +1,9 @@
+import React from 'react';
 import { Box, Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import React from 'react';
 import PriceBox from '../components/PriceBox';
 import { useGetPriceEvolutionQuery } from '../services/analytics';
+import { useGeolocation } from '../hooks';
 
 const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
