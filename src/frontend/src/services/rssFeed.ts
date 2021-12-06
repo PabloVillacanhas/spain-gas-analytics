@@ -33,7 +33,7 @@ async function getExpansionRss(): Promise<Array<FeedItem>> {
 	return feedItems.filter((item) =>
 		/[c|C]arburante|[G|g]asolina|[D|d]i[e|é]sel/.test(item.description)
 	);
-};
+}
 
 async function getEuropaPressRss(): Promise<Array<FeedItem>> {
 	return fetch(`https://www.europapress.es/rss/rss.aspx?buscar=diesel`)
@@ -41,7 +41,7 @@ async function getEuropaPressRss(): Promise<Array<FeedItem>> {
 		str => {	
 			const feed = new window.DOMParser().parseFromString(str, 'text/xml');
 			const nodelist = feed.querySelectorAll('item');
-			const feedItems = Array.from(nodelist).map((el: any) => ({
+			return Array.from(nodelist).map((el: any) => ({
 				source: 'europapress.es',
 				link: el.querySelector('link').innerHTML,
 				title: el
@@ -51,7 +51,6 @@ async function getEuropaPressRss(): Promise<Array<FeedItem>> {
 				date: el.querySelector('pubDate').innerHTML,
 				image: el.querySelector('content')?.getAttribute('url'),
 			}))
-			return feedItems
 		}))
 }
 
@@ -70,8 +69,6 @@ export default class RssScapperService{
 		else{
 			const results = await Promise.all([getEuropaPressRss(), getExpansionRss()]).then((values) => {
 				const a  = values.reduce((acc, val) => acc.concat(val), []);
-				console.log(`a`, a)
-				console.log(`a`, values)
 				return a
 			});
 			return Promise.resolve(results);
