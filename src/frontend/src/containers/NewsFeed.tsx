@@ -58,21 +58,19 @@ export const NewsFeed = (props: Props) => {
 								dateStyle: 'full',
 							}).format(new Date(item.date))}
 						/>
-						<CardActionArea>
-							<CardMedia
-								component='img'
-								height='140'
-								image={item.image || NoImage}
-							/>
-							<CardContent>
-								<Typography gutterBottom variant='h5' component='div'>
-									{item.title}
-								</Typography>
-								<Typography variant='body2' color='text.secondary'>
-									{item.description}
-								</Typography>
-							</CardContent>
-						</CardActionArea>
+						<CardMedia
+							component='img'
+							height='140'
+							image={item.image || NoImage}
+						/>
+						<CardContent>
+							<Typography gutterBottom variant='h5' component='div'>
+								{item.title}
+							</Typography>
+							<Typography variant='body2' color='text.secondary'>
+								{item.description}
+							</Typography>
+						</CardContent>
 						<CardActions>
 							<Button
 								size='small'
