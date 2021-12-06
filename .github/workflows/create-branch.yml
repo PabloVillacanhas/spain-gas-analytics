@@ -1,0 +1,48 @@
+name: "Set up issue automatization"
+
+on:
+  # The issues event below is only needed for the default (auto) mode,
+  # you can remove it otherwise
+  issues:
+    types: [opened, assigned]
+  # The issue_comment event below is only needed for the ChatOps mode,
+  # you can remove it otherwise
+  issue_comment:
+    types: [ created ]
+  pull_request:
+    types: [ closed ]
+
+env:
+  PROJECT_BOARD: "SpainGasAnalytics"
+  ICEBOX_COLUMN_NAME: "To do"
+  STARTED_COLUMN_NAME: "In progress"
+  BEFORE_REVIEW_COLUMN_NAME: "Waiting on Review"
+
+jobs:  
+  add-issue-to-project-board:
+    name: "Add issue to project"
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' || github.event.action == 'assigned'
+    steps:
+      - name: get column name
+        id: column
+        run: |
+          if [[ "${{ github.event.action }}" == "assigned" ]]; then \
+            echo "::set-output name=column-name::${{ env.STARTED_COLUMN_NAME }}"; \
+          else \
+            echo "::set-output name=column-name::${{ env.ICEBOX_COLUMN_NAME }}"; \
+          fi
+      - name: add issue to column
+        uses: alex-page/github-project-automation-plus@v0.2.4
+        with:
+          project: ${{ env.PROJECT_BOARD }}
+          column: ${{ steps.column.outputs.column-name }}
+          repo-token: ${{ secrets.AUTOMATIZATION_TOKEN }}
+  create_issue_branch_job:
+    name: "Create branch for issue"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Issue Branch
+        uses: robvanderleek/create-issue-branch@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
