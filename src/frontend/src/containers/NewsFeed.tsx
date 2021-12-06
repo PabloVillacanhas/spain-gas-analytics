@@ -4,7 +4,6 @@ import {
 	Box,
 	Button,
 	Card,
-	CardActionArea,
 	CardActions,
 	CardContent,
 	CardHeader,
@@ -25,9 +24,9 @@ export const NewsFeed = (props: Props) => {
 	const [items, setItems] = useState<Array<FeedItem>>();
 
 	useEffect(() => {
-		rssScapperService.current.getRssItems().then((items) => {
+		rssScapperService.current.getRssItems().then((itemsReturned) => {
 			setItems(
-				items.sort(
+				itemsReturned.sort(
 					(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 				)
 			);

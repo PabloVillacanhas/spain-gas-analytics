@@ -30,10 +30,9 @@ async function getExpansionRss(): Promise<Array<FeedItem>> {
 		date: el.querySelector('pubDate').innerHTML,
 		image: el.querySelector('content')?.getAttribute('url'),
 	}));
-	const filtered = feedItems.filter((item) =>
+	return feedItems.filter((item) =>
 		/[c|C]arburante|[G|g]asolina|[D|d]i[e|é]sel/.test(item.description)
 	);
-	return filtered;
 };
 
 async function getEuropaPressRss(): Promise<Array<FeedItem>> {
@@ -51,8 +50,8 @@ async function getEuropaPressRss(): Promise<Array<FeedItem>> {
 					.querySelector('description').innerHTML,
 				date: el.querySelector('pubDate').innerHTML,
 				image: el.querySelector('content')?.getAttribute('url'),
-			}));
-			return feedItems;
+			}))
+			return feedItems
 		}))
 }
 
@@ -61,7 +60,9 @@ export default class RssScapperService{
 	private items = [];
   public static instance: RssScapperService = new RssScapperService();
 
-	private RSSScapperService(){}
+	private RSSScapperService(){
+		//Singleton. Use the public attribute instance
+	}
 
 	async getRssItems(): Promise<Array<FeedItem>>{
 		if (this.items.length)
