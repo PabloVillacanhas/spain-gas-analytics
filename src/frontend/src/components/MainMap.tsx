@@ -5,7 +5,6 @@ import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import CircularProgress from '@mui/material/CircularProgress';
 import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
-import { DataFilterExtension } from '@deck.gl/extensions';
 import { carburantsNamesMap } from '../constants';
 import { useGeolocation } from '../hooks';
 

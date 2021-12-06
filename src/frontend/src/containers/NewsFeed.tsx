@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
 	Avatar,
+	Box,
 	Button,
 	Card,
-	CardActionArea,
 	CardActions,
 	CardContent,
 	CardHeader,
@@ -12,77 +12,56 @@ import {
 	Typography,
 } from '@mui/material';
 import ExpansionNewsIcon from '../assets/img/expansion40x40.jpeg';
+import EuropaPress from '../assets/img/ep40x40.jpeg';
+import NoImage from '../assets/img/noimage.png';
+import RssScapperService from '../services/rssFeed';
+import type { FeedItem } from '../services/rssFeed';
 
 interface Props {}
 
 export const NewsFeed = (props: Props) => {
-	const [rssUrl, setRssUrl] = useState(
-		'https://e00-expansion.uecdn.es/rss/economia.xml'
-	);
-	const [items, setItems] = useState<
-		| Array<{
-				title: string;
-				description: string;
-				source: string;
-				date: Date;
-				link: string;
-				image: string;
-		  }>
-		| undefined
-	>(undefined);
+	const rssScapperService = React.useRef(RssScapperService.instance);
+	const [items, setItems] = useState<Array<FeedItem>>();
 
 	useEffect(() => {
-		getRss();
+		rssScapperService.current.getRssItems().then((itemsReturned) => {
+			setItems(
+				itemsReturned.sort(
+					(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+				)
+			);
+		});
 	}, []);
 
-	const getRss = async () => {
-		const urlRegex =
-			/(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
-		if (!urlRegex.test(rssUrl)) {
-			return;
+	const getAvatar = useCallback((source) => {
+		switch (source) {
+			case 'europapress.es':
+				return EuropaPress;
+			case 'expansion.com':
+				return ExpansionNewsIcon;
+			default:
+				return NoImage;
 		}
-		const res = await fetch(`https://e00-expansion.uecdn.es/rss/economia.xml`);
-		const str = await res.text();
-		const feed = new window.DOMParser().parseFromString(str, 'text/xml');
-		const nodelist = feed.querySelectorAll('item');
-		const feedItems = Array.from(nodelist).map((el: any) => ({
-			source: 'expansion.com',
-			link: el.querySelector('link').innerHTML,
-			title: el
-				.querySelector('title')
-				.innerHTML.substring(
-					9,
-					el.querySelector('title').innerHTML.indexOf(']')
-				),
-			description: el
-				.querySelector('description')
-				.innerHTML.substring(
-					9,
-					el.querySelector('description').innerHTML.indexOf('.') + 1
-				),
-			date: el.querySelector('pubDate').innerHTML,
-			image: el.querySelector('content').getAttribute('url'),
-		}));
-		const filtered = feedItems.filter((item) =>
-			/[c|C]arburante|[G|g]asolina|[D|d]i[e|é]sel/.test(item.description)
-		);
-		setItems(filtered);
-	};
+	}, []);
 
 	return (
 		<Container maxWidth='xl'>
 			<h1>RSS Feed</h1>
-			{items?.map((item) => (
-				<Card sx={{ maxWidth: 345 }}>
-					<CardHeader
-						avatar={<Avatar src={ExpansionNewsIcon} />}
-						title={item.source}
-						subheader={new Intl.DateTimeFormat('en-GB', {
-							dateStyle: 'full',
-						}).format(new Date(item.date))}
-					/>
-					<CardActionArea>
-						<CardMedia component='img' height='140' image={item.image} />
+			<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+				{items?.map((item) => (
+					<Card sx={{ maxWidth: 345, margin: '2em', height: 'fit-content' }}>
+						<CardHeader
+							avatar={<Avatar src={getAvatar(item.source)} />}
+							title={item.source}
+							subheader={new Intl.DateTimeFormat('en-GB', {
+								dateStyle: 'full',
+							}).format(new Date(item.date))}
+						/>
+						<CardMedia
+							component='img'
+							height='140'
+							image={item.image || NoImage}
+						/>
 						<CardContent>
 							<Typography gutterBottom variant='h5' component='div'>
 								{item.title}
@@ -91,19 +70,19 @@ export const NewsFeed = (props: Props) => {
 								{item.description}
 							</Typography>
 						</CardContent>
-					</CardActionArea>
-					<CardActions>
-						<Button
-							size='small'
-							color='primary'
-							href={item.link}
-							target='_blank'
-						>
-							Read more
-						</Button>
-					</CardActions>
-				</Card>
-			))}
+						<CardActions>
+							<Button
+								size='small'
+								color='primary'
+								href={item.link}
+								target='_blank'
+							>
+								Read more
+							</Button>
+						</CardActions>
+					</Card>
+				))}
+			</Box>
 		</Container>
 	);
 };
