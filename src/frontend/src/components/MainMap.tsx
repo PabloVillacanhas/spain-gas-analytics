@@ -38,7 +38,7 @@ const MainMap = () => {
 	// const { geolocationPosition } = useGeolocation();
 
 	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
-	const [filter, setFilter] = useState<MapFilterParams | undefined>({
+	const [filter, setFilter] = useState<MapFilterParams>({
 		gasType: 'diesel_a',
 		sellType: [],
 		serviceType: [],
@@ -143,19 +143,7 @@ const MainMap = () => {
 				data: {
 					type: 'FeatureCollection',
 					features: results
-						.filter((p) => {
-							const by_gasType = p.feature.properties.prices[filter.gasType];
-							const by_serviceType = filter.serviceType.some((type) => {
-								return (
-									p.feature.properties.service_type?.includes(`(${type})`) ||
-									(type === 'NA' && !p.feature.properties.service_type)
-								);
-							});
-							const by_sellType = filter.sellType.some(
-								(type) => p.feature.properties.sale_type === type
-							);
-							return by_gasType && by_serviceType && by_sellType;
-						})
+						.filter((p) => matchsFilters(p))
 						.map((p) => p.feature),
 				},
 				getFillColor: (d) =>
@@ -169,26 +157,43 @@ const MainMap = () => {
 		}
 	}, [analitycs, filter]);
 
+	const matchsFilters = useCallback(
+		(feature) => {
+			const by_gasType = feature.feature.properties.prices[filter.gasType];
+			const by_serviceType = filter.serviceType.some((type) => {
+				return (
+					feature.feature.properties.service_type?.includes(`(${type})`) ||
+					(type === 'NA' && !feature.feature.properties.service_type)
+				);
+			});
+			const by_sellType = filter.sellType.some(
+				(type) => feature.feature.properties.sale_type === type
+			);
+			return by_gasType && by_serviceType && by_sellType;
+		},
+		[filter]
+	);
+
 	useEffect(() => {
-		if (results) {
-			let analitycs = {};
+		if (results && filter) {
+			let newAnalitycs = {};
 			Object.keys(carburantsNamesMap).forEach((type) => {
 				const main =
 					results.reduce((acc, curr) => {
-						if (curr.feature.properties.prices[type])
+						if (matchsFilters(curr))
 							return (acc += curr.feature.properties.prices[type]);
 						else return acc;
-					}, 0) /
-					results.filter((f) => f.feature.properties.prices[type]).length;
+					}, 0) / results.filter((f) => matchsFilters(f)).length;
 				const stdDeviation = getStandardDeviation(
 					results
-						.filter((f) => f.feature.properties.prices[type])
+						.filter((f) => matchsFilters(f))
 						.map((f) => f.feature.properties.prices[type])
 				);
-				analitycs[`main_${type}`] = main;
-				analitycs[`std_deviation_${type}`] = stdDeviation;
+				newAnalitycs[`main_${type}`] = main;
+				newAnalitycs[`std_deviation_${type}`] = stdDeviation;
 			});
-			setAnalitycs(analitycs);
+			console.log(`analitycs`, analitycs);
+			setAnalitycs({ ...analitycs, ...newAnalitycs });
 		}
 	}, [results, filter]);
 
