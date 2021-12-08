@@ -35,13 +35,13 @@ const MainMap = () => {
 	const deckRef: React.MutableRefObject<any> = useRef(undefined);
 	const mapRef: React.MutableRefObject<any> = useRef(undefined);
 
-	const { geolocationPosition } = useGeolocation();
+	// const { geolocationPosition } = useGeolocation();
 
 	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
 	const [filter, setFilter] = useState<MapFilterParams | undefined>({
 		gasType: 'diesel_a',
 		sellType: [],
-		serviceType: '',
+		serviceType: [],
 	});
 	const [layerProps, setLayerProps] = useState({
 		id: 'geojson-layer',
@@ -69,7 +69,8 @@ const MainMap = () => {
 						feature: {
 							...item.coordinates,
 							properties: {
-								...item.coordinates.properties,
+								sale_type: item.sale_type,
+								service_type: item.service_type,
 								name: item.name,
 								prices: item.last_price[0] || [],
 							},
@@ -142,7 +143,19 @@ const MainMap = () => {
 				data: {
 					type: 'FeatureCollection',
 					features: results
-						.filter((p) => p.feature.properties.prices[filter.gasType])
+						.filter((p) => {
+							const by_gasType = p.feature.properties.prices[filter.gasType];
+							const by_serviceType = filter.serviceType.some((type) => {
+								return (
+									p.feature.properties.service_type?.includes(`(${type})`) ||
+									(type === 'NA' && !p.feature.properties.service_type)
+								);
+							});
+							const by_sellType = filter.sellType.some(
+								(type) => p.feature.properties.sale_type === type
+							);
+							return by_gasType && by_serviceType && by_sellType;
+						})
 						.map((p) => p.feature),
 				},
 				getFillColor: (d) =>
@@ -177,7 +190,7 @@ const MainMap = () => {
 			});
 			setAnalitycs(analitycs);
 		}
-	}, [results]);
+	}, [results, filter]);
 
 	return (
 		<div
@@ -197,16 +210,17 @@ const MainMap = () => {
 			<DeckGL
 				ref={deckRef}
 				layers={[new GeoJsonLayer(layerProps)]}
-				initialViewState={{
-					...INITIAL_VIEW_STATE,
-					...(geolocationPosition
-						? {
-								longitude: geolocationPosition.coords.longitude,
-								latitude: geolocationPosition.coords.latitude,
-								zoom: 12,
-						  }
-						: {}),
-				}}
+				// initialViewState={{
+				// 	...INITIAL_VIEW_STATE,
+				// 	...(geolocationPosition
+				// 		? {
+				// 				longitude: geolocationPosition.coords.longitude,
+				// 				latitude: geolocationPosition.coords.latitude,
+				// 				zoom: 12,
+				// 		  }
+				// 		: {}),
+				// }}
+				initialViewState={INITIAL_VIEW_STATE}
 				controller={true}
 				onWebGLInitialized={setGLContext}
 				glOptions={{

@@ -25,9 +25,17 @@ const MenuProps = {
 export interface MapFilterParams {
 	gasType: string;
 	sellType: string[];
-	serviceType: string;
+	serviceType: string[];
 	// open: boolean;
 }
+
+const serviceType = {
+	P: 'Atendido',
+	A: 'Autoservicio',
+	D: 'Desatendido',
+	NA: 'Sin datos',
+};
+const sellType = { P: 'Publica', R: 'Restringida' };
 
 interface Props {
 	onFilterChange: (filter: MapFilterParams) => any;
@@ -35,17 +43,24 @@ interface Props {
 
 export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 	const [filter, setFilter] = useState<MapFilterParams>({
-		gasType: '',
-		sellType: [],
-		serviceType: '',
+		gasType: 'diesel_a',
+		sellType: Object.keys(sellType),
+		serviceType: Object.keys(serviceType),
 		// open: true,
 	});
 
-	const handleChange = (event: SelectChangeEvent) => {
-		const newFilter = { ...filter, [event.target.name]: event.target.value };
-		setFilter(newFilter);
-		onFilterChange(newFilter);
-	};
+	const handleChange = React.useCallback(
+		(event: SelectChangeEvent) => {
+			const newFilter = { ...filter, [event.target.name]: event.target.value };
+			setFilter(newFilter);
+			onFilterChange(newFilter);
+		},
+		[filter]
+	);
+
+	useEffect(() => {
+		onFilterChange(filter);
+	}, []);
 
 	return (
 		<Box
@@ -83,34 +98,53 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 					value={filter.sellType as any}
 					onChange={handleChange}
 					input={<OutlinedInput label='Sell type' />}
-					renderValue={(selected) =>
-						(selected as unknown as string[]).join(', ') as any
-					}
+					renderValue={(selected) => {
+						if (selected.length === 4) return 'All';
+						else
+							return (selected as unknown as string[])
+								.map((s) => sellType[s])
+								.join(', ') as any;
+					}}
 					MenuProps={MenuProps}
 				>
-					{['Atendido', 'Autoservicio', 'Desatendido'].map((t: string) => (
-						<MenuItem key={t} value={t}>
-							<Checkbox checked={filter.sellType.indexOf(t) > -1} />
-							<ListItemText primary={t} />
-						</MenuItem>
-					))}
+					{Array.from(Object.keys(sellType)).map((k) => {
+						return (
+							<MenuItem key={k} value={k}>
+								<Checkbox checked={filter.sellType.includes(k)} />
+								<ListItemText primary={sellType[k]} />
+							</MenuItem>
+						);
+					})}
 				</Select>
 			</FormControl>
 			<FormControl>
-				<InputLabel id='sellType-select-label'>Service type</InputLabel>
+				<InputLabel id='serviceType-label'>Service type</InputLabel>
 				<Select
-					labelId='serviceType-select-label'
-					id='serviceType'
-					value={filter.serviceType}
+					labelId='serviceType-multiple-checkbox-label'
+					id='serviceType-multiple-checkbox'
+					multiple
 					label='serviceType'
 					name='serviceType'
+					value={filter.serviceType as any}
 					onChange={handleChange}
+					input={<OutlinedInput label='Service type' />}
+					renderValue={(selected) => {
+						if (selected.length === 3) return 'All';
+						else
+							return (selected as unknown as string[])
+								.map((s) => serviceType[s])
+								.join(', ') as any;
+					}}
+					MenuProps={MenuProps}
 				>
-					{['Venta al publico', 'Venta a cooperativistas'].map((i) => (
-						<MenuItem key={i} value={i}>
-							{i}
-						</MenuItem>
-					))}
+					{Array.from(Object.keys(serviceType)).map((k) => {
+						return (
+							<MenuItem key={k} value={k}>
+								<Checkbox checked={filter.serviceType.includes(k)} />
+								<ListItemText primary={serviceType[k]} />
+							</MenuItem>
+						);
+					})}
 				</Select>
 			</FormControl>
 			{/* <FormGroup sx={{ zIndex: 1, justifyContent: 'center' }}>
