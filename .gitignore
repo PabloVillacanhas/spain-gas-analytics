@@ -3,6 +3,8 @@
 postgres_data
 __pycache__/
 
+# Generated client
+src/backend/client*
 # Created by https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pythonvanilla,pycharm
 
