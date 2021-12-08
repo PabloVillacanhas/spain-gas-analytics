@@ -26,7 +26,7 @@ class GasStation(db.Model):
     perc_bioeth = db.Column(db.Float, nullable=False)
     perc_metil_ester = db.Column(db.Float, nullable=False)
     prices = db.relationship("Prices", backref='gasstations', lazy='dynamic')
-    last_price = db.relationship("Prices", lazy='joined',
+    last_price = db.relationship("Prices", lazy='joined', viewonly=True,
                                  primaryjoin=f"and_(GasStation.id==Prices.gasstation_id,Prices.date>'{today}')")
 
     new_prices = []
