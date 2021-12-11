@@ -2,7 +2,7 @@
 /workspace.xml
 postgres_data
 __pycache__/
-
+frontend/node_modules
 # Generated client
 src/backend/client*
 # Created by https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,pycharm
