@@ -1,6 +1,6 @@
 import requests
 
-from backend.mytypes import RestResponse, restresponse_from_dict
+from src.mytypes import RestResponse, restresponse_from_dict
 
 URL = 'https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/'
 

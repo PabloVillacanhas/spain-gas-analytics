@@ -9,7 +9,7 @@ module.exports = {
 		historyApiFallback: true,
 	},
 	output: {
-		path: path.resolve(__dirname, "../backend/client"),
+		path: path.resolve(__dirname, "../src/backend/client"),
 		publicPath: '/',
 		assetModuleFilename: 'images/[hash][ext][query]',
 		filename: 'main.bundle.js'

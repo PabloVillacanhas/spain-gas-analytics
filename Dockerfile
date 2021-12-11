@@ -5,12 +5,12 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 RUN pip3 install pipenv
 WORKDIR /usr/local/backend
-COPY ./src/backend .
+COPY ./backend .
 RUN pipenv install --system
 EXPOSE 5000:5000
 
 FROM base as scrapper
-ENTRYPOINT ["sh", "entrypoint.sh", "loader"]
+CMD ["sleep", "10000"]
 
 FROM base as app
-ENTRYPOINT ["sh", "entrypoint.sh", "app"]
+ENTRYPOINT ["entrypoint.sh", "app"]

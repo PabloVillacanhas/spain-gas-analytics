@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource
 
 from .schemas import GasStationSchema, PricesSchema
-from backend.sql.service import get, get_all, get_price_evolution, get_prices
+from src.sql.service import get, get_all, get_price_evolution, get_prices
 
 gasstations_v1_bp = Blueprint('gasstations_v1_0_bp', __name__)
 api = Api(gasstations_v1_bp)

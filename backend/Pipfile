@@ -22,7 +22,7 @@ flask_sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 
 [requires]
-python_version = "3.9.7"
+python_version = "3.9.5"
 
 [scripts]
-loader = "python3 -m backend.loader"
+loader = "python3 -m src.loader"

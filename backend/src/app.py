@@ -3,7 +3,7 @@ import logging
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
 from flask_restful import Api
-from backend import extensions
+from src import extensions
 from .resources import gasstations_v1_bp
 
 

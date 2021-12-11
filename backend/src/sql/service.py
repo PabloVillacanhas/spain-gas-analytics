@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.sql.elements import and_
 
-from backend.sql.models import GasStation, Prices
+from src.sql.models import GasStation, Prices
 from . import db
 from .views import PriceEvolutionView
 
