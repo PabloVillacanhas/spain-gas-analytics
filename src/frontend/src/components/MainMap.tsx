@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MapboxLayer } from '@deck.gl/mapbox';
 import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
 import CircularProgress from '@mui/material/CircularProgress';
 import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
 import { carburantsNamesMap } from '../constants';
@@ -35,26 +35,61 @@ const MainMap = () => {
 	const deckRef: React.MutableRefObject<any> = useRef(undefined);
 	const mapRef: React.MutableRefObject<any> = useRef(undefined);
 
-	const { geolocationPosition } = useGeolocation();
+	// const { geolocationPosition } = useGeolocation();
 
 	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
-	const [filter, setFilter] = useState<MapFilterParams | undefined>({
+	const [filter, setFilter] = useState<MapFilterParams>({
 		gasType: 'diesel_a',
 		sellType: [],
-		serviceType: '',
+		serviceType: [],
 	});
+	const [mode, setMode] = useState('global');
 	const [layerProps, setLayerProps] = useState({
-		id: 'geojson-layer',
-		pointRadiusMaxPixels: 5,
-		data: {
-			type: 'FeatureCollection',
-			features: [],
+		gasstations: {
+			id: 'geojson-layer',
+			pointRadiusMaxPixels: 5,
+			data: {
+				type: 'FeatureCollection',
+				features: [],
+			},
+			pickable: true,
+			stroked: false,
+			filled: true,
+			pointType: 'circle',
+			parameters: {
+				depthTest: false,
+			},
+			pointRadiusMinPixels: 3,
 		},
-		pickable: true,
-		stroked: false,
-		filled: true,
-		pointType: 'circle',
-		pointRadiusMinPixels: 3,
+		pricesText: {
+			id: 'pricestext-layer',
+			data: {
+				type: 'FeatureCollection',
+				features: [],
+			},
+			getSize: 12,
+			characterSet: [
+				'1',
+				'2',
+				'3',
+				'4',
+				'5',
+				'6',
+				'7',
+				'8',
+				'9',
+				'0',
+				'.',
+				'€',
+			],
+			getTextAnchor: 'middle',
+			getAlignmentBaseline: 'center',
+			getPixelOffset: [28, 0],
+			parameters: {
+				depthTest: false,
+			},
+			backgroundColor: [200, 200, 200, 150],
+		},
 	});
 	const [analitycs, setAnalitycs] = useState<any>(undefined);
 
@@ -69,7 +104,8 @@ const MainMap = () => {
 						feature: {
 							...item.coordinates,
 							properties: {
-								...item.coordinates.properties,
+								sale_type: item.sale_type,
+								service_type: item.service_type,
 								name: item.name,
 								prices: item.last_price[0] || [],
 							},
@@ -138,11 +174,11 @@ const MainMap = () => {
 
 	useEffect(() => {
 		if (analitycs && filter) {
-			const newLayerProps = {
+			const gasstationsLayerProps = {
 				data: {
 					type: 'FeatureCollection',
 					features: results
-						.filter((p) => p.feature.properties.prices[filter.gasType])
+						.filter((p) => matchsFilters(p))
 						.map((p) => p.feature),
 				},
 				getFillColor: (d) =>
@@ -152,32 +188,58 @@ const MainMap = () => {
 					filter &&
 					getPointColor(d.properties.prices[filter.gasType], filter.gasType),
 			};
-			setLayerProps({ ...layerProps, ...newLayerProps });
+			const pricesLayerProps = {
+				data: results.filter((p) => matchsFilters(p)).map((p) => p.feature),
+				getPosition: (d) => d.geometry.coordinates,
+				getText: (d) => d.properties.prices[filter.gasType].toString() + '€',
+				visible: mode === 'local',
+			};
+			setLayerProps((layers) => ({
+				gasstations: { ...layers.gasstations, ...gasstationsLayerProps },
+				pricesText: { ...layers.pricesText, ...pricesLayerProps },
+			}));
 		}
-	}, [analitycs, filter]);
+	}, [analitycs, filter, mode]);
+
+	const matchsFilters = useCallback(
+		(feature) => {
+			const by_gasType = feature.feature.properties.prices[filter.gasType];
+			const by_serviceType = filter.serviceType.some((type) => {
+				return (
+					feature.feature.properties.service_type?.includes(`(${type})`) ||
+					(type === 'NA' && !feature.feature.properties.service_type)
+				);
+			});
+			const by_sellType = filter.sellType.some(
+				(type) => feature.feature.properties.sale_type === type
+			);
+			return by_gasType && by_serviceType && by_sellType;
+		},
+		[filter]
+	);
 
 	useEffect(() => {
-		if (results) {
-			let analitycs = {};
+		if (results && filter) {
+			let newAnalitycs = {};
 			Object.keys(carburantsNamesMap).forEach((type) => {
 				const main =
 					results.reduce((acc, curr) => {
-						if (curr.feature.properties.prices[type])
+						if (matchsFilters(curr))
 							return (acc += curr.feature.properties.prices[type]);
 						else return acc;
-					}, 0) /
-					results.filter((f) => f.feature.properties.prices[type]).length;
+					}, 0) / results.filter((f) => matchsFilters(f)).length;
 				const stdDeviation = getStandardDeviation(
 					results
-						.filter((f) => f.feature.properties.prices[type])
+						.filter((f) => matchsFilters(f))
 						.map((f) => f.feature.properties.prices[type])
 				);
-				analitycs[`main_${type}`] = main;
-				analitycs[`std_deviation_${type}`] = stdDeviation;
+				newAnalitycs[`main_${type}`] = main;
+				newAnalitycs[`std_deviation_${type}`] = stdDeviation;
 			});
-			setAnalitycs(analitycs);
+			console.log(`analitycs`, analitycs);
+			setAnalitycs({ ...analitycs, ...newAnalitycs });
 		}
-	}, [results]);
+	}, [results, filter]);
 
 	return (
 		<div
@@ -196,17 +258,24 @@ const MainMap = () => {
 			)}
 			<DeckGL
 				ref={deckRef}
-				layers={[new GeoJsonLayer(layerProps)]}
-				initialViewState={{
-					...INITIAL_VIEW_STATE,
-					...(geolocationPosition
-						? {
-								longitude: geolocationPosition.coords.longitude,
-								latitude: geolocationPosition.coords.latitude,
-								zoom: 12,
-						  }
-						: {}),
-				}}
+				layers={[
+					new GeoJsonLayer(layerProps.gasstations),
+					new TextLayer(layerProps.pricesText),
+				]}
+				onViewStateChange={({ viewState }) =>
+					viewState.zoom > 11 ? setMode('local') : setMode('global')
+				}
+				// initialViewState={{
+				// 	...INITIAL_VIEW_STATE,
+				// 	...(geolocationPosition
+				// 		? {
+				// 				longitude: geolocationPosition.coords.longitude,
+				// 				latitude: geolocationPosition.coords.latitude,
+				// 				zoom: 12,
+				// 		  }
+				// 		: {}),
+				// }}
+				initialViewState={INITIAL_VIEW_STATE}
 				controller={true}
 				onWebGLInitialized={setGLContext}
 				glOptions={{

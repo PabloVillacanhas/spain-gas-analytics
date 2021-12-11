@@ -23,6 +23,7 @@ class GasStation(db.Model):
     remision = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
     sale_type = db.Column(db.String, nullable=False)
+    service_type = db.Column(db.String, nullable=False)
     perc_bioeth = db.Column(db.Float, nullable=False)
     perc_metil_ester = db.Column(db.Float, nullable=False)
     prices = db.relationship("Prices", backref='gasstations', lazy='dynamic')
