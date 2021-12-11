@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+psycopg2 = "*"
 
 [packages]
 requests = "*"
@@ -11,7 +12,7 @@ xmltodict = "*"
 pymongo = {extras = ["srv"],version = "*"}
 sqlalchemy = "*"
 geoalchemy2 = "*"
-psycopg2 = "*"
+psycopg2-binary = "*"
 pytz = "*"
 flask = "*"
 flask-restful = "*"
