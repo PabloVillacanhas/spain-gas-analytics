@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MapboxLayer } from '@deck.gl/mapbox';
 import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
 import CircularProgress from '@mui/material/CircularProgress';
 import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
 import { carburantsNamesMap } from '../constants';
@@ -43,18 +43,40 @@ const MainMap = () => {
 		sellType: [],
 		serviceType: [],
 	});
+	const [mode, setMode] = useState('global');
 	const [layerProps, setLayerProps] = useState({
-		id: 'geojson-layer',
-		pointRadiusMaxPixels: 5,
-		data: {
-			type: 'FeatureCollection',
-			features: [],
+		gasstations: {
+			id: 'geojson-layer',
+			pointRadiusMaxPixels: 5,
+			data: {
+				type: 'FeatureCollection',
+				features: [],
+			},
+			pickable: true,
+			stroked: false,
+			filled: true,
+			pointType: 'circle',
+			parameters: {
+				depthTest: false,
+			},
+			pointRadiusMinPixels: 3,
 		},
-		pickable: true,
-		stroked: false,
-		filled: true,
-		pointType: 'circle',
-		pointRadiusMinPixels: 3,
+		pricesText: {
+			id: 'pricestext-layer',
+			data: {
+				type: 'FeatureCollection',
+				features: [],
+			},
+			getSize: 12,
+			characterSet: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '€'],
+			getTextAnchor: 'middle',
+			getAlignmentBaseline: 'center',
+			getPixelOffset: [28, 0],
+			parameters: {
+				depthTest: false,
+			},
+			backgroundColor: [200, 200, 200, 200],
+		},
 	});
 	const [analitycs, setAnalitycs] = useState<any>(undefined);
 
@@ -139,7 +161,7 @@ const MainMap = () => {
 
 	useEffect(() => {
 		if (analitycs && filter) {
-			const newLayerProps = {
+			const gasstationsLayerProps = {
 				data: {
 					type: 'FeatureCollection',
 					features: results
@@ -153,9 +175,18 @@ const MainMap = () => {
 					filter &&
 					getPointColor(d.properties.prices[filter.gasType], filter.gasType),
 			};
-			setLayerProps({ ...layerProps, ...newLayerProps });
+			const pricesLayerProps = {
+				data: results.filter((p) => matchsFilters(p)).map((p) => p.feature),
+				getPosition: (d) => d.geometry.coordinates,
+				getText: (d) => d.properties.prices[filter.gasType].toString() + '€',
+				visible: mode === 'local',
+			};
+			setLayerProps((layers) => ({
+				gasstations: { ...layers.gasstations, ...gasstationsLayerProps },
+				pricesText: { ...layers.pricesText, ...pricesLayerProps },
+			}));
 		}
-	}, [analitycs, filter]);
+	}, [analitycs, filter, mode]);
 
 	const matchsFilters = useCallback(
 		(feature) => {
@@ -214,7 +245,13 @@ const MainMap = () => {
 			)}
 			<DeckGL
 				ref={deckRef}
-				layers={[new GeoJsonLayer(layerProps)]}
+				layers={[
+					new GeoJsonLayer(layerProps.gasstations),
+					new TextLayer(layerProps.pricesText),
+				]}
+				onViewStateChange={({ viewState }) =>
+					viewState.zoom > 11 ? setMode('local') : setMode('global')
+				}
 				// initialViewState={{
 				// 	...INITIAL_VIEW_STATE,
 				// 	...(geolocationPosition
