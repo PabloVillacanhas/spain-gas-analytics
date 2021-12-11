@@ -26,7 +26,7 @@ def fetch_and_persist():
 if __name__ == '__main__':
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_BIND'] = "engine"
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/gas'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost:5432/gas'
     db.init_app(app)
     initConfiguration()
     with app.app_context():
