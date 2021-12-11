@@ -1,0 +1,26 @@
+version: '2'
+services:
+  postgres:
+    image: 'postgis/postgis:latest'
+    restart: always
+    volumes:
+      - 'gasdata:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_PASSWORD=123
+    ports:
+      - '5432:5432'
+  scrapper:
+    image: 'gas_app:scrapper'
+    depends_on:
+      - postgres
+    links:
+      - postgres
+  app:
+    image: 'gas_app:app'
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - '5000:5000'
+volumes:
+  gasdata:
