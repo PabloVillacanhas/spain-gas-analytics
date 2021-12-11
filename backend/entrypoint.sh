@@ -3,7 +3,8 @@
 b="app"
 
 if [ "$1" = "app" ]; then 
-	pipenv run flask run
+	cd src 
+	flask run
 else
-	pipenv run python3 -m src.loader
+	python3 -m src.loader
 fi

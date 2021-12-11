@@ -10,7 +10,7 @@ RUN pipenv install --system
 EXPOSE 5000:5000
 
 FROM base as scrapper
-CMD ["sleep", "10000"]
+ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
 
 FROM base as app
-ENTRYPOINT ["entrypoint.sh", "app"]
+ENTRYPOINT ["sh", "entrypoint.sh", "app"]
