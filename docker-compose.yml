@@ -1,4 +1,4 @@
-version: '2'
+version: '3.4'
 services:
   postgres:
     image: 'postgis/postgis:latest'
@@ -10,13 +10,17 @@ services:
     ports:
       - '5432:5432'
   scrapper:
-    image: 'gas_app:scrapper'
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile
+      target: scrapper
     depends_on:
       - postgres
-    links:
-      - postgres
   app:
-    image: 'gas_app:app'
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile
+      target: app
     restart: always
     depends_on:
       - postgres

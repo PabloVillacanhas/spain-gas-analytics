@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 b="app"
+cd src
 
 if [ "$1" = "app" ]; then 
-	cd src 
-	flask run
+	flask run --host 0.0.0.0
 else
-	python3 -m src.loader
+	python3 loader.py
 fi

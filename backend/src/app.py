@@ -3,8 +3,8 @@ import logging
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
 from flask_restful import Api
-from src import extensions
-from .resources import gasstations_v1_bp
+import extensions
+from resources import gasstations_v1_bp
 
 
 def create_app():
