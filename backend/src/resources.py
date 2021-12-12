@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource
 
 from .schemas import GasStationSchema, PricesSchema
-from src.sql.service import get, get_all, get_price_evolution, get_prices
+from sql.service import get, get_all, get_price_evolution, get_prices
 
 gasstations_v1_bp = Blueprint('gasstations_v1_0_bp', __name__)
 api = Api(gasstations_v1_bp)
@@ -43,7 +43,10 @@ class PricesResource(Resource):
         return result
 
 
-api.add_resource(GasStationResource, '/api/v1/gas_stations/<int:gas_station_id>', endpoint='gas_station')
-api.add_resource(GasStationsResource, '/api/v1/gas_stations/', endpoint='gas_stations')
-api.add_resource(PriceEvolutionResource, '/api/v1/analytics/prices_evolution', endpoint='price_evolution')
+api.add_resource(GasStationResource,
+                 '/api/v1/gas_stations/<int:gas_station_id>', endpoint='gas_station')
+api.add_resource(GasStationsResource, '/api/v1/gas_stations/',
+                 endpoint='gas_stations')
+api.add_resource(PriceEvolutionResource,
+                 '/api/v1/analytics/prices_evolution', endpoint='price_evolution')
 api.add_resource(PricesResource, '/api/v1/analytics/prices', endpoint='prices')

@@ -1,6 +1,6 @@
 from .db import raw_collection, gas_stations_collection
 
-from ..mytypes import RestResponse, restresponse_from_dict, restresponse_to_dict
+from mytypes import RestResponse, restresponse_from_dict, restresponse_to_dict
 
 
 def find_by_date() -> RestResponse:
