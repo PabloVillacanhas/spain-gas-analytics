@@ -22,9 +22,8 @@ def fetch_and_persist():
         insert_in_mongo(rest_response)
         logging.info("Persisting in postgres the data")
         insert_in_postgres(rest_response_to_normalized(find_last()))
-    else
-    logging.info(
-        "Database is updated")
+    else:
+        logging.info("Database is updated")
 
 
 if __name__ == '__main__':

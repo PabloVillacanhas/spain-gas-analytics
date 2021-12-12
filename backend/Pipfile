@@ -26,4 +26,4 @@ marshmallow-sqlalchemy = "*"
 python_version = "3.9.5"
 
 [scripts]
-loader = "python3 loader"
+loader = "python3 loader.py"
