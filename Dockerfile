@@ -11,8 +11,8 @@ RUN pipenv install --system
 ENV PYTHONPATH=/usr/local/app/backend/src
 EXPOSE 5000
 
-FROM base as scrapper
-ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
+# FROM base as scrapper
+# ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
 # CMD ["sleep", "1000"]
 
 FROM base as app
