@@ -11,15 +11,15 @@ services:
       - '5432:5432'
   scrapper:
     build:
-      context: ./backend
-      dockerfile: ../Dockerfile
+      context: ./
+      dockerfile: Dockerfile
       target: scrapper
     depends_on:
       - postgres
   app:
     build:
-      context: ./backend
-      dockerfile: ../Dockerfile
+      context: ./
+      dockerfile: Dockerfile
       target: app
     restart: always
     depends_on:
