@@ -1,4 +1,6 @@
 import logging
+import os
+from dotenv.main import load_dotenv
 
 from nosql.service import find_last, persist as insert_in_mongo
 from sql.service import persist as insert_in_postgres
@@ -28,8 +30,10 @@ def fetch_and_persist():
 
 if __name__ == '__main__':
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_BIND'] = "engine"
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@postgres:5432/gas'
+    if os.environ.get('FLASK_ENV') == 'development':
+        load_dotenv()
+    app.config['SQLALCHEMY_BINDS'] = {os.environ.get('DATABASE_URL')}
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     db.init_app(app)
     initConfiguration()
     with app.app_context():

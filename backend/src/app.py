@@ -1,5 +1,7 @@
 import logging
+import os
 
+from dotenv.main import load_dotenv
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
 from flask_restful import Api
@@ -9,9 +11,10 @@ from resources import gasstations_v1_bp
 
 def create_app():
     app = Flask(__name__, static_url_path="", static_folder='client')
-    app.config['SQLALCHEMY_BINDS'] = {
-        "postgres": 'postgresql://postgres:123@postgres:5432/gas'}
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@postgres:5432/gas'
+    if os.environ.get('FLASK_ENV') == 'development':
+        load_dotenv()
+    app.config['SQLALCHEMY_BINDS'] = {os.environ.get('DATABASE_URL')}
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     # app.config.from_object(settings_module)
 
     logging.basicConfig()
