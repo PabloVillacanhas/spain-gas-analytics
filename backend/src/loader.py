@@ -26,9 +26,9 @@ def fetch_and_persist():
 
 
 if __name__ == '__main__':
-    load_dotenv()
     app = Flask(__name__)
-    print(os.environ.get('DATABASE_URL'))
+    if os.environ.get('FLASK_ENVIRONMENT') == 'development':
+        load_dotenv()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = {
         os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')}
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')

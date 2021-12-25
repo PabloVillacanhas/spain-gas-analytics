@@ -13,7 +13,6 @@ def create_app():
     app = Flask(__name__, static_url_path="", static_folder='client')
     if os.environ.get('FLASK_ENV') == 'development':
         load_dotenv()
-    app.config['SQLALCHEMY_BINDS'] = {os.environ.get('DATABASE_URL')}
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     # app.config.from_object(settings_module)
 

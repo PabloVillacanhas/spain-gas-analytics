@@ -14,6 +14,8 @@ services:
       context: ./
       dockerfile: Dockerfile
       target: scrapper
+    environment:
+      - FLASK_ENV=development
     depends_on:
       - postgres
   app:
@@ -22,6 +24,8 @@ services:
       dockerfile: Dockerfile
       target: app
     restart: always
+    environment:
+      - FLASK_ENV=development
     depends_on:
       - postgres
     ports:
