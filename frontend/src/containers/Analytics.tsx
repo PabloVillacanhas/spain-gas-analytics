@@ -1,14 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import {
-	Container,
-	Card,
-	CardActionArea,
-	CardContent,
-	CardMedia,
-	Typography,
-	Link,
-	Box,
-} from '@mui/material';
+import { Container, Link, Box } from '@mui/material';
 import { Link as RouterLink, Route, Routes } from 'react-router-dom';
 import { PricesEvolution } from './PricesEvolution';
 import { PricesComparision } from './PricesComparision';

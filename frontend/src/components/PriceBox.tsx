@@ -42,7 +42,7 @@ export default function PriceDataCard(props: PriceDataCardProps) {
 						color:
 							priceDiff() < 0
 								? green[600]
-								: priceDiff() < 0
+								: priceDiff() > 0
 								? red[600]
 								: grey[900],
 						fontWeight: 'medium',
@@ -53,7 +53,7 @@ export default function PriceDataCard(props: PriceDataCardProps) {
 						<ArrowDownwardIcon
 							sx={{ color: green[600], position: 'relative', top: '5px' }}
 						/>
-					) : priceDiff() < 0 ? (
+					) : priceDiff() > 0 ? (
 						<ArrowUpwardIcon
 							sx={{ color: red[600], position: 'relative', top: '5px' }}
 						/>

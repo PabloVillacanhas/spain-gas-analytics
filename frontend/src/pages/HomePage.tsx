@@ -42,68 +42,63 @@ const HomePage = () => {
 				Gas prices on{' '}
 				{Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(new Date())}
 			</h1>
-			<Container maxWidth='xl'>
-				<Paper variant='outlined' square>
-					<Container>
-						<h1>Prices</h1>
-						<h2>Diesel</h2>
-						<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-							{data &&
-								Object.keys(data[0])
-									.filter((f) => f.includes('diesel'))
-									.sort()
-									.map((k) => (
-										<PriceBox
-											key={k}
-											title={carburantsNamesMap[k]}
-											data={adapter(k)}
-										></PriceBox>
-									))}
-						</Box>
-						<h2>Gasoline</h2>
-						<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-							{data &&
-								Object.keys(data[0])
-									.filter((f) => f.includes('gasoline'))
-									.sort()
-									.map((k) => (
-										<PriceBox
-											key={k}
-											title={carburantsNamesMap[k]}
-											data={adapter(k)}
-										></PriceBox>
-									))}
-						</Box>
-						<h2>Other</h2>
-						<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-							{data &&
-								Object.keys(data[0])
-									.filter(
-										(f) =>
-											!f.includes('gasoline') &&
-											!f.includes('diesel') &&
-											f !== 'date'
-									)
-									.sort()
-									.map((k) => (
-										<PriceBox
-											key={k}
-											title={carburantsNamesMap[k]}
-											data={adapter(k)}
-										></PriceBox>
-									))}
-						</Box>
-					</Container>
-				</Paper>
-				<Paper variant='outlined' square>
-					<Container></Container>
-				</Paper>
-				{/* <Paper variant='outlined' square>
+			<Box>
+				<h2>Diesel</h2>
+				<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+					{data &&
+						Object.keys(data[0])
+							.filter((f) => f.includes('diesel'))
+							.sort()
+							.map((k) => (
+								<PriceBox
+									key={k}
+									title={carburantsNamesMap[k]}
+									data={adapter(k)}
+								></PriceBox>
+							))}
+				</Box>
+				<h2>Gasoline</h2>
+				<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+					{data &&
+						Object.keys(data[0])
+							.filter((f) => f.includes('gasoline'))
+							.sort()
+							.map((k) => (
+								<PriceBox
+									key={k}
+									title={carburantsNamesMap[k]}
+									data={adapter(k)}
+								></PriceBox>
+							))}
+				</Box>
+				<h2>Other</h2>
+				<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+					{data &&
+						Object.keys(data[0])
+							.filter(
+								(f) =>
+									!f.includes('gasoline') &&
+									!f.includes('diesel') &&
+									f !== 'date'
+							)
+							.sort()
+							.map((k) => (
+								<PriceBox
+									key={k}
+									title={carburantsNamesMap[k]}
+									data={adapter(k)}
+								></PriceBox>
+							))}
+				</Box>
+			</Box>
+			<Paper variant='outlined' square>
+				<Container></Container>
+			</Paper>
+			{/* <Paper variant='outlined' square>
 					<Container>
 						<h1>Gas stations</h1>
 					</Container>
 				</Paper> */}
-			</Container>
 		</Container>
 	);
 };
