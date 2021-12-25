@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy.sql.elements import and_
+from sqlalchemy.sql.operators import desc_op
 
 from sql.models import GasStation, Prices
 from . import db
@@ -45,3 +46,10 @@ def get_prices():
         Prices.date > datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat())
     db.session.commit()
     return result.all()
+
+
+def get_last_price_date():
+    result = db.session.query(
+        Prices.date).distinct().order_by(desc_op(Prices.date)).limit(1)
+    db.session.commit()
+    return result.scalar()
