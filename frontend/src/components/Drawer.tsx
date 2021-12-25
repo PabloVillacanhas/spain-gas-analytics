@@ -11,6 +11,7 @@ import {
 	ListItemText,
 	Theme,
 	styled,
+	useTheme,
 } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import HomeIcon from '@mui/icons-material/Home';
@@ -61,7 +62,10 @@ const DrawerStyled = styled(MuiDrawer, {
 
 export const Drawer = (props: Props) => {
 	const location = useLocation();
-	const [openDrawer, setOpenDrawer] = useState(false);
+	const theme = useTheme();
+	const [openDrawer, setOpenDrawer] = useState(
+		window.innerWidth >= theme.breakpoints.values.md
+	);
 
 	return (
 		<DrawerStyled variant='permanent' open={openDrawer}>

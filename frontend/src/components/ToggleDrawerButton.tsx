@@ -9,7 +9,7 @@ interface Props {
 }
 
 const openedMixin = (theme: Theme): CSSObject => ({
-	[theme.breakpoints.up('sm')]: {
+	[theme.breakpoints.up('md')]: {
 		left: `calc(${
 			(
 				theme.components?.MuiDrawer?.styleOverrides
@@ -20,8 +20,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
-	left: `calc(${theme.spacing(7)} - 13px)`,
-	[theme.breakpoints.up('sm')]: {
+	[theme.breakpoints.up('md')]: {
 		left: `calc(${theme.spacing(9)} - 13px)`,
 	},
 });
@@ -36,6 +35,9 @@ const ToggleDrawerButton = (props: Props & { className?: string }) => {
 
 const StyledToggleDrawerButton = styled(ToggleDrawerButton)(
 	({ theme, openDrawer, onClick }) => ({
+		[theme.breakpoints.down('md')]: {
+			visibility: 'hidden',
+		},
 		borderRadius: '100%',
 		border: '1px solid gray',
 		position: 'absolute',
@@ -58,7 +60,7 @@ const StyledToggleDrawerButton = styled(ToggleDrawerButton)(
 			'& .MuiDrawer-paper': closedMixin(theme),
 		}),
 		'&:hover': {
-			background: '#f00',
+			background: theme.palette.background,
 			cursor: 'pointer',
 		},
 	})
