@@ -35,7 +35,7 @@ const MainMap = () => {
 	const deckRef: React.MutableRefObject<any> = useRef(undefined);
 	const mapRef: React.MutableRefObject<any> = useRef(undefined);
 
-	// const { geolocationPosition } = useGeolocation();
+	const { geolocationPosition } = useGeolocation();
 
 	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
 	const [filter, setFilter] = useState<MapFilterParams>({
@@ -265,17 +265,17 @@ const MainMap = () => {
 				onViewStateChange={({ viewState }) =>
 					viewState.zoom > 11 ? setMode('local') : setMode('global')
 				}
-				// initialViewState={{
-				// 	...INITIAL_VIEW_STATE,
-				// 	...(geolocationPosition
-				// 		? {
-				// 				longitude: geolocationPosition.coords.longitude,
-				// 				latitude: geolocationPosition.coords.latitude,
-				// 				zoom: 12,
-				// 		  }
-				// 		: {}),
-				// }}
-				initialViewState={INITIAL_VIEW_STATE}
+				initialViewState={{
+					...INITIAL_VIEW_STATE,
+					...(geolocationPosition
+						? {
+								longitude: geolocationPosition.coords.longitude,
+								latitude: geolocationPosition.coords.latitude,
+								zoom: 12,
+						  }
+						: {}),
+				}}
+				// initialViewState={INITIAL_VIEW_STATE}
 				controller={true}
 				onWebGLInitialized={setGLContext}
 				glOptions={{

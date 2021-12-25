@@ -24,6 +24,8 @@ const carburantsNamesMap = {
 const HomePage = () => {
 	const { data, error, isLoading } = useGetPriceEvolutionQuery(null);
 
+	useGeolocation(); //Here it is Just to ask for permissions
+
 	const adapter = (item) => {
 		const dataparsed: Array<any> = data.reduce((acc: any, curr: any) => {
 			if (curr[item])

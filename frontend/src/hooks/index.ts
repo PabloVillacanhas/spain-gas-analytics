@@ -7,7 +7,7 @@ export function useGeolocation(options: PositionOptions = {}) : {
 	const [error, setError] = useState<GeolocationPositionError>()
 
 	useEffect(() => {	
-		if (!geolocationPosition || geolocationPosition.timestamp < new Date().getTime() - (options.timeout ?? 5000) ) 
+		if ((!geolocationPosition || geolocationPosition.timestamp < new Date().getTime() - (options.timeout ?? 5000)) && !error?.PERMISSION_DENIED) 
 			navigator.geolocation.getCurrentPosition(setGeolocationPosition, setError, options)
 	}, [options])
 	
