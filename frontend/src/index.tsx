@@ -42,6 +42,14 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiDrawer: {
+			styleOverrides: {
+				paperAnchorLeft: {
+					width: '160px',
+					overflow: 'visible',
+				},
+			},
+		},
 	},
 });
 

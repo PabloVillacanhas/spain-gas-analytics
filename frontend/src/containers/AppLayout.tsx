@@ -1,28 +1,9 @@
 import React from 'react';
-import {
-	Box,
-	CssBaseline,
-	AppBar,
-	Toolbar,
-	Typography,
-	Drawer,
-	List,
-	ListItem,
-	ListItemIcon,
-	ListItemText,
-	Link,
-} from '@mui/material';
-import MapIcon from '@mui/icons-material/Map';
-import HomeIcon from '@mui/icons-material/Home';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
-
-const drawerWidth = 240;
+import { Box, CssBaseline, AppBar, Toolbar, Typography } from '@mui/material';
+import { Outlet, useLocation } from 'react-router-dom';
+import Drawer from '../components/Drawer';
 
 export const AppLayout = () => {
-	const location = useLocation();
-
 	return (
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
@@ -36,73 +17,7 @@ export const AppLayout = () => {
 					</Typography>
 				</Toolbar>
 			</AppBar>
-			<Drawer
-				variant='permanent'
-				sx={{
-					width: drawerWidth,
-					flexShrink: 0,
-					[`& .MuiDrawer-paper`]: {
-						width: drawerWidth,
-						boxSizing: 'border-box',
-					},
-				}}
-			>
-				<Toolbar />
-				<Box sx={{ overflow: 'auto' }}>
-					<List>
-						<Link to='/' component={RouterLink}>
-							<ListItem
-								button
-								key={'Home'}
-								selected={location.pathname === '/'}
-							>
-								<ListItemIcon>
-									<HomeIcon />
-								</ListItemIcon>
-
-								<ListItemText primary={'Home'} />
-							</ListItem>
-						</Link>
-						<Link to='/map' component={RouterLink}>
-							<ListItem
-								button
-								key={'Map'}
-								selected={location.pathname === '/map'}
-							>
-								<ListItemIcon>
-									<MapIcon />
-								</ListItemIcon>
-
-								<ListItemText primary={'Map'} />
-							</ListItem>
-						</Link>
-						<Link to='/analytics' component={RouterLink}>
-							<ListItem
-								button
-								key={'Analytics'}
-								selected={location.pathname === '/analytics'}
-							>
-								<ListItemIcon>
-									<TimelineIcon />
-								</ListItemIcon>
-								<ListItemText primary={'Analytics'} />
-							</ListItem>
-						</Link>
-						<Link to='/news' component={RouterLink}>
-							<ListItem
-								button
-								key={'News'}
-								selected={location.pathname === '/news'}
-							>
-								<ListItemIcon>
-									<MenuBookIcon />
-								</ListItemIcon>
-								<ListItemText primary={'News'} />
-							</ListItem>
-						</Link>
-					</List>
-				</Box>
-			</Drawer>
+			<Drawer></Drawer>
 			<Box component='main' sx={{ width: '100%', height: '100vh' }}>
 				<Toolbar />
 				<Outlet />
