@@ -27,7 +27,7 @@ def fetch_and_persist():
 
 if __name__ == '__main__':
     app = Flask(__name__)
-    if os.environ.get('FLASK_ENVIRONMENT') == 'development':
+    if os.environ.get('FLASK_ENV') == 'development':
         load_dotenv()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = {
         os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')}

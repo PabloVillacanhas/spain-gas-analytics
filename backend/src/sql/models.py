@@ -49,7 +49,6 @@ class GasStation(db.Model):
         self.perc_bioeth = perf_bioeth
         self.perc_metil_ester = perc_metil_ester
 
-
 @dataclass
 class Prices(db.Model):
     __tablename__ = 'prices'

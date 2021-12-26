@@ -1,8 +1,8 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_restful import Api, Resource
 
-from schemas import GasStationSchema, PricesSchema
-from sql.service import get, get_all, get_price_evolution, get_prices
+from schemas import GasStationSchema, PricesSchema, GasStationSchemaQuery, GasStationSchemaPagination
+from sql.service import get, get_all, get_price_evolution, get_prices, find_closest_gasstations
 
 gasstations_v1_bp = Blueprint('gasstations_v1_0_bp', __name__)
 api = Api(gasstations_v1_bp)
@@ -11,6 +11,8 @@ gas_stations_schema = GasStationSchema(many=True)
 min_gas_stations_schema = GasStationSchema(many=True,
                                            exclude=['prices', 'id_adminzone1', 'id_adminzone2', 'id_adminzone3', 'cp',
                                                     'perc_metil_ester', 'remision', 'perc_bioeth', 'margin'])
+paginated_gasstations_schema = GasStationSchemaPagination()
+gasstation_schema_query = GasStationSchemaQuery()
 price_evolution = PricesSchema(many=True)
 rawprices = PricesSchema(many=True, exclude=['date'])
 
@@ -24,8 +26,14 @@ class GasStationResource(Resource):
 
 class GasStationsResource(Resource):
     def get(self):
-        gs = get_all()
-        result = min_gas_stations_schema.dump(gs)
+        gasstation_schema_query.validate(request.args)
+        if len(request.args):
+            gs = find_closest_gasstations(
+                request.args.get('near'), int(request.args.get('page')))
+            result = paginated_gasstations_schema.dump(gs)
+        else:
+            gs = get_all()
+            result = min_gas_stations_schema.dump(gs)
         return result
 
 

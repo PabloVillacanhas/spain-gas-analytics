@@ -8,6 +8,13 @@ def transform_to_float(value):
     return float(value.replace(',', '.')) if bool(value) else None
 
 
+def transform_to_utc_datetime(value):
+    timezone = pytz.timezone("Europe/Madrid")
+    date_aware = timezone.localize(
+        datetime.strptime(value, '%d/%m/%Y %H:%M:%S'))
+    return date_aware.astimezone(pytz.utc)
+
+
 def rest_response_to_normalized(data: RestResponse) -> list[GasStation]:
     """
 

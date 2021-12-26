@@ -1,4 +1,3 @@
-from flask_marshmallow.schema import Schema
 from marshmallow.decorators import post_dump, pre_dump
 
 from extensions import ma
@@ -9,6 +8,12 @@ from marshmallow_sqlalchemy import ModelConverter
 from flask_marshmallow.fields import fields
 from geoalchemy2.types import Geometry
 import json
+
+
+class PagedListSchema(ma.Schema):
+    pages = fields.Integer(dump_to='numPages', dump_only=True)
+    per_page = fields.Integer(dump_to='perPage', dump_only=True)
+    total = fields.Integer(dump_to='totalItems', dump_only=True)
 
 
 class GeoConverter(ModelConverter):
@@ -47,3 +52,13 @@ class GasStationSchema(BaseSQLAlchemyAutoSchema):
         if obj.coordinates:
             return json.loads(dumps(Feature(to_shape(obj.coordinates))))
         return []
+
+
+class GasStationSchemaQuery(ma.Schema):
+    near = fields.Str(required=False)
+    page = fields.Integer(required=False)
+
+
+class GasStationSchemaPagination(PagedListSchema):
+    items = fields.Nested(GasStationSchema, many=True, exclude=['prices', 'id_adminzone1', 'id_adminzone2', 'id_adminzone3', 'cp',
+                                                    'perc_metil_ester', 'remision', 'perc_bioeth', 'margin'])
