@@ -56,6 +56,7 @@ class GasStationSchema(BaseSQLAlchemyAutoSchema):
 
 class GasStationSchemaQuery(ma.Schema):
     near = fields.Str(required=False)
+    page = fields.Integer(required=False)
 
 
 class GasStationSchemaPagination(PagedListSchema):

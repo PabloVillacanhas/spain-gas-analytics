@@ -11,6 +11,7 @@ from .views import PriceEvolutionView
 from geoalchemy2.types import Geography
 from sqlalchemy.sql import cast
 
+
 def persist(gas_stations: list[GasStation]):
     for idx, gas_station in enumerate(gas_stations):
         gs = db.session.query(GasStation).get(gas_station.id)
@@ -66,9 +67,9 @@ def to_WKTElement(point):
         f"POINT({point.split(',')[0]} {point.split(',')[1]})", srid=4269)
 
 
-def find_closest_gasstations(origin):
+def find_closest_gasstations(origin, page):
     result = db.session\
         .query(GasStation).order_by(func.ST_Distance(GasStation.coordinates, cast(to_WKTElement(origin), Geography(srid=4269))))\
-        .paginate(1, 20)
+        .paginate(page, 20)
     db.session.commit()
     return result

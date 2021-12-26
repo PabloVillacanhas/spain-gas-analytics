@@ -28,8 +28,8 @@ class GasStationsResource(Resource):
     def get(self):
         gasstation_schema_query.validate(request.args)
         if len(request.args):
-            print(request.args.get('near'))
-            gs = find_closest_gasstations("-1.560857,39.100792")
+            gs = find_closest_gasstations(
+                request.args.get('near'), int(request.args.get('page')))
             result = paginated_gasstations_schema.dump(gs)
         else:
             gs = get_all()
