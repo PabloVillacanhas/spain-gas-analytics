@@ -2,11 +2,14 @@ from datetime import datetime
 
 from sqlalchemy.sql.elements import and_
 from sqlalchemy.sql.operators import desc_op
+from sqlalchemy import func
+from geoalchemy2.elements import WKTElement
 
 from sql.models import GasStation, Prices
 from . import db
 from .views import PriceEvolutionView
-
+from geoalchemy2.types import Geography
+from sqlalchemy.sql import cast
 
 def persist(gas_stations: list[GasStation]):
     for idx, gas_station in enumerate(gas_stations):
@@ -53,3 +56,19 @@ def get_last_price_date():
         Prices.date).distinct().order_by(desc_op(Prices.date)).limit(1)
     db.session.commit()
     return result.scalar()
+
+
+def to_WKTElement(point):
+    """
+    Point in lng,lat format
+    """
+    return WKTElement(
+        f"POINT({point.split(',')[0]} {point.split(',')[1]})", srid=4269)
+
+
+def find_closest_gasstations(origin):
+    result = db.session\
+        .query(GasStation).order_by(func.ST_Distance(GasStation.coordinates, cast(to_WKTElement(origin), Geography(srid=4269))))\
+        .paginate(1, 20)
+    db.session.commit()
+    return result
