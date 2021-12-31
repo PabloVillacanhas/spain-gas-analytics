@@ -14,7 +14,7 @@ import {
 	useTheme,
 } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
-import HomeIcon from '@mui/icons-material/Home';
+import EuroIcon from '@mui/icons-material/Euro';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
@@ -79,10 +79,10 @@ export const Drawer = (props: Props) => {
 					<Link to='/' component={RouterLink}>
 						<ListItem button key={'Home'} selected={location.pathname === '/'}>
 							<ListItemIcon>
-								<HomeIcon />
+								<EuroIcon />
 							</ListItemIcon>
 
-							{openDrawer && <ListItemText primary={'Home'} />}
+							{openDrawer && <ListItemText primary={'Prices'} />}
 						</ListItem>
 					</Link>
 					<Link to='/map' component={RouterLink}>
