@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import PriceBox from '../components/PriceBox';
 import { useGetPriceEvolutionQuery } from '../services/analytics';
 import { useGeolocation } from '../hooks';
+import { PriceTableEnhanced } from '../components/PriceTable';
 
 const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
@@ -24,7 +25,7 @@ const carburantsNamesMap = {
 const HomePage = () => {
 	const { data, error, isLoading } = useGetPriceEvolutionQuery(null);
 
-	useGeolocation(); //Here it is Just to ask for permissions
+	const { geolocationPosition } = useGeolocation(); //Here it is Just to ask for permissions
 
 	const adapter = (item) => {
 		const dataparsed: Array<any> = data.reduce((acc: any, curr: any) => {
@@ -44,6 +45,13 @@ const HomePage = () => {
 				Gas prices on{' '}
 				{Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(new Date())}
 			</h1>
+			{geolocationPosition ? (
+				<PriceTableEnhanced
+					location={geolocationPosition?.coords}
+				></PriceTableEnhanced>
+			) : (
+				'nooo'
+			)}
 			<Box>
 				<h2>Diesel</h2>
 				<Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
