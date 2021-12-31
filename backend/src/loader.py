@@ -15,7 +15,7 @@ def fetch_and_persist():
     logging.debug('Try to fetch and persist')
     if get_last_price_date().date() != datetime.utcnow().date():
         logging.info(
-            "Last response registered in mongo differs from today UTC")
+            "Last price update differs from today UTC")
         logging.info("Fetching remote data given by government")
         rest_response = fetch()
         logging.info("Fetching remote data given by government")

@@ -56,9 +56,9 @@ class GasStationSchema(BaseSQLAlchemyAutoSchema):
 
 class GasStationSchemaQuery(ma.Schema):
     near = fields.Str(required=False)
-    page = fields.Integer(required=False)
+    page = fields.Integer(allow_none=True)
 
 
 class GasStationSchemaPagination(PagedListSchema):
     items = fields.Nested(GasStationSchema, many=True, exclude=['prices', 'id_adminzone1', 'id_adminzone2', 'id_adminzone3', 'cp',
-                                                    'perc_metil_ester', 'remision', 'perc_bioeth', 'margin'])
+                                                                'perc_metil_ester', 'remision', 'perc_bioeth', 'margin'])

@@ -29,7 +29,7 @@ class GasStationsResource(Resource):
         gasstation_schema_query.validate(request.args)
         if len(request.args):
             gs = find_closest_gasstations(
-                request.args.get('near'), int(request.args.get('page')))
+                request.args.get('near'), request.args.get('page'))
             result = paginated_gasstations_schema.dump(gs)
         else:
             gs = get_all()
@@ -51,10 +51,11 @@ class PricesResource(Resource):
         return result
 
 
-api.add_resource(GasStationResource,
-                 '/api/v1/gas_stations/<int:gas_station_id>', endpoint='gas_station')
 api.add_resource(GasStationsResource, '/api/v1/gas_stations/',
                  endpoint='gas_stations')
+api.add_resource(GasStationResource,
+                 '/api/v1/gas_stations/<int:gas_station_id>', endpoint='gas_station')
+
 api.add_resource(PriceEvolutionResource,
                  '/api/v1/analytics/prices_evolution', endpoint='price_evolution')
 api.add_resource(PricesResource, '/api/v1/analytics/prices', endpoint='prices')
