@@ -39,7 +39,7 @@ const StyledToggleDrawerButton = styled(ToggleDrawerButton)(
 			visibility: 'hidden',
 		},
 		borderRadius: '100%',
-		border: '1px solid gray',
+		border: '1px solid rgba(0, 0, 0, 0.20)',
 		position: 'absolute',
 		top: '80px',
 		left: '60px',
