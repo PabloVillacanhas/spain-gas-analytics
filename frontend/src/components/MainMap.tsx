@@ -7,6 +7,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
 import { carburantsNamesMap } from '../constants';
 import { useGeolocation } from '../hooks';
+import { useLocation } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -32,12 +34,14 @@ interface MainMapProps {}
 const MainMap = () => {
 	// DeckGL and mapbox will both draw into this WebGL context
 	const [glContext, setGLContext] = useState();
-	const deckRef: React.MutableRefObject<any> = useRef(undefined);
-	const mapRef: React.MutableRefObject<any> = useRef(undefined);
+	const deckRef: React.MutableRefObject<any> = useRef();
+	const mapRef: React.MutableRefObject<any> = useRef();
+
+	const [searchParams] = useSearchParams();
 
 	const { geolocationPosition } = useGeolocation();
 
-	const [results, setResults] = useState<React.SetStateAction<any>>(undefined);
+	const [results, setResults] = useState<React.SetStateAction<any>>();
 	const [filter, setFilter] = useState<MapFilterParams>({
 		gasType: 'diesel_a',
 		sellType: [],
@@ -91,7 +95,7 @@ const MainMap = () => {
 			backgroundColor: [200, 200, 200, 150],
 		},
 	});
-	const [analitycs, setAnalitycs] = useState<any>(undefined);
+	const [analitycs, setAnalitycs] = useState<any>();
 
 	useEffect(() => {
 		fetch('http://localhost:5000/api/v1/gas_stations')
@@ -274,12 +278,21 @@ const MainMap = () => {
 								zoom: 12,
 						  }
 						: {}),
+					...(searchParams?.get('location')
+						? {
+								longitude: parseFloat(
+									searchParams.get('location')?.split(',')[0] || '0'
+								),
+								latitude: parseFloat(
+									searchParams.get('location')?.split(',')[1] || '0'
+								),
+								zoom: 16,
+						  }
+						: {}),
 				}}
-				// initialViewState={INITIAL_VIEW_STATE}
 				controller={true}
 				onWebGLInitialized={setGLContext}
 				glOptions={{
-					/* To render vector tile polygons correctly */
 					stencil: true,
 				}}
 				getTooltip={({ object }) => {

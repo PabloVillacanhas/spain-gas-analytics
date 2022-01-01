@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link as RouterLink, Route, Routes } from 'react-router-dom';
 import {
 	TableContainer,
 	Paper,
@@ -9,6 +10,7 @@ import {
 	TableBody,
 	Box,
 	TableSortLabel,
+	Link,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import haversine from 'haversine-distance';
@@ -57,7 +59,7 @@ function createData(row: Item, origin: GeolocationCoordinates): Row {
 			},
 			{ lng: origin.longitude, lat: origin.latitude }
 		),
-		coordinates: row.coordinates.geometry.toString(),
+		coordinates: `${row.coordinates.geometry.coordinates[0]},${row.coordinates.geometry.coordinates[1]}`,
 	};
 }
 
@@ -109,7 +111,7 @@ const headCells: readonly HeadCell[] = [
 	},
 	{
 		id: 'direction',
-		numeric: true,
+		numeric: false,
 		disablePadding: false,
 		label: 'Direction',
 	},
@@ -122,19 +124,19 @@ const headCells: readonly HeadCell[] = [
 	},
 	{
 		id: 'characteristics',
-		numeric: true,
+		numeric: false,
 		disablePadding: false,
-		label: 'caracteristicas',
+		label: 'Characteristics',
 	},
 	{
 		id: 'labour_data',
-		numeric: true,
+		numeric: false,
 		disablePadding: false,
-		label: 'labour_data',
+		label: 'Labour data',
 	},
 	{
 		id: 'coordinates',
-		numeric: true,
+		numeric: false,
 		disablePadding: false,
 		label: 'See on map',
 	},
@@ -184,7 +186,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 							</TableSortLabel>
 						</TableCell>
 					) : (
-						<TableCell>{headCell.label}</TableCell>
+						<TableCell
+							key={headCell.id}
+							align={headCell.numeric ? 'right' : 'left'}
+							padding={headCell.disablePadding ? 'none' : 'normal'}
+						>
+							{headCell.label}
+						</TableCell>
 					)
 				)}
 			</TableRow>
@@ -242,13 +250,23 @@ export const PriceTableEnhanced = (props: Props) => {
 							>
 								<TableCell align='left'>{row.name}</TableCell>
 								<TableCell align='right'>{row.price}</TableCell>
-								<TableCell align='right'>{row.direction}</TableCell>
+								<TableCell align='left'>{row.direction}</TableCell>
 								<TableCell align='right'>{`${(row.distance / 1000).toFixed(
 									2
 								)} km`}</TableCell>
-								<TableCell align='right'>{row.characteristics}</TableCell>
-								<TableCell align='right'>{row.labour_data}</TableCell>
-								<TableCell align='right'>{row.coordinates}</TableCell>
+								<TableCell align='left'>{row.characteristics}</TableCell>
+								<TableCell align='left'>{row.labour_data}</TableCell>
+								<TableCell align='left'>
+									<Link
+										to={`/map?location=${row.coordinates.split(',')[0]},${
+											row.coordinates.split(',')[1]
+										}`}
+										component={RouterLink}
+										sx={{ margin: '2em', flex: '1em' }}
+									>
+										See on map
+									</Link>
+								</TableCell>
 							</TableRow>
 						))}
 				</TableBody>
