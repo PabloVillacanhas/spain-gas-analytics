@@ -5,6 +5,8 @@ import PriceBox from '../components/PriceBox';
 import { useGetPriceEvolutionQuery } from '../services/analytics';
 import { useGeolocation } from '../hooks';
 import { PriceTableEnhanced } from '../components/PriceTable';
+import PublicOffIcon from '@mui/icons-material/PublicOff';
+import { red } from '@mui/material/colors';
 
 const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
@@ -50,7 +52,17 @@ const HomePage = () => {
 					location={geolocationPosition?.coords}
 				></PriceTableEnhanced>
 			) : (
-				'nooo'
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					<PublicOffIcon sx={{ color: red[500] }}></PublicOffIcon> Please enable
+					the geolocation to see the list of the cheapest gas stations in your
+					zone
+				</Box>
 			)}
 			<Box>
 				<h2>Diesel</h2>
