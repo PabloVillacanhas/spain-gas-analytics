@@ -11,9 +11,14 @@ import {
 	TableSortLabel,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
+import haversine from 'haversine-distance';
 
 type Item = {
-	coordinates: { type: 'Feature'; geometry: string; properties: string };
+	coordinates: {
+		type: 'Feature';
+		geometry: { coordinates: { lat: number; lng: number } };
+		properties: string;
+	};
 	direction: 'CARRETERA N-550 KM. 71,2';
 	id: 511;
 	labour_data: 'L-V: 07:00-23:00; S-D: 08:00-23:00';
@@ -32,18 +37,26 @@ type Row = {
 	name: string;
 	price: number;
 	direction: string;
-	caracteristicas: string;
+	characteristics: string;
+	distance: number;
 	labour_data: string;
 	coordinates: string;
 };
 
-function createData(row: Item): Row {
+function createData(row: Item, origin: GeolocationCoordinates): Row {
 	return {
 		name: row.name,
 		price: row.last_price[0].diesel_a,
 		direction: row.direction,
-		caracteristicas: row.sale_type,
+		characteristics: row.sale_type,
 		labour_data: row.labour_data,
+		distance: haversine(
+			{
+				lng: row.coordinates.geometry.coordinates[0],
+				lat: row.coordinates.geometry.coordinates[1],
+			},
+			{ lng: origin.longitude, lat: origin.latitude }
+		),
 		coordinates: row.coordinates.geometry.toString(),
 	};
 }
@@ -77,6 +90,7 @@ interface HeadCell {
 	disablePadding: boolean;
 	label: string;
 	numeric: boolean;
+	sortable?: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
@@ -91,6 +105,7 @@ const headCells: readonly HeadCell[] = [
 		numeric: true,
 		disablePadding: false,
 		label: 'Price',
+		sortable: true,
 	},
 	{
 		id: 'direction',
@@ -99,7 +114,14 @@ const headCells: readonly HeadCell[] = [
 		label: 'Direction',
 	},
 	{
-		id: 'caracteristicas',
+		id: 'distance',
+		numeric: true,
+		disablePadding: false,
+		label: 'Distance',
+		sortable: true,
+	},
+	{
+		id: 'characteristics',
 		numeric: true,
 		disablePadding: false,
 		label: 'caracteristicas',
@@ -128,7 +150,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-	const createSortHandler =
+	const handleSort =
 		(property: keyof Row) => (event: React.MouseEvent<unknown>) => {
 			props.onRequestSort(event, property);
 		};
@@ -136,29 +158,35 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 	return (
 		<TableHead>
 			<TableRow>
-				{headCells.map((headCell) => (
-					<TableCell
-						key={headCell.id}
-						align={headCell.numeric ? 'right' : 'left'}
-						padding={headCell.disablePadding ? 'none' : 'normal'}
-						sortDirection={props.orderBy === headCell.id ? props.order : false}
-					>
-						<TableSortLabel
-							active={props.orderBy === headCell.id}
-							direction={props.orderBy === headCell.id ? props.order : 'asc'}
-							onClick={createSortHandler(headCell.id)}
+				{headCells.map((headCell) =>
+					headCell.sortable ? (
+						<TableCell
+							key={headCell.id}
+							align={headCell.numeric ? 'right' : 'left'}
+							padding={headCell.disablePadding ? 'none' : 'normal'}
+							sortDirection={
+								props.orderBy === headCell.id ? props.order : false
+							}
 						>
-							{headCell.label}
-							{props.orderBy === headCell.id ? (
-								<Box component='span' sx={visuallyHidden}>
-									{props.order === 'desc'
-										? 'sorted descending'
-										: 'sorted ascending'}
-								</Box>
-							) : null}
-						</TableSortLabel>
-					</TableCell>
-				))}
+							<TableSortLabel
+								active={props.orderBy === headCell.id}
+								direction={props.orderBy === headCell.id ? props.order : 'asc'}
+								onClick={handleSort(headCell.id)}
+							>
+								{headCell.label}
+								{props.orderBy === headCell.id ? (
+									<Box component='span' sx={visuallyHidden}>
+										{props.order === 'desc'
+											? 'sorted descending'
+											: 'sorted ascending'}
+									</Box>
+								) : null}
+							</TableSortLabel>
+						</TableCell>
+					) : (
+						<TableCell>{headCell.label}</TableCell>
+					)
+				)}
 			</TableRow>
 		</TableHead>
 	);
@@ -191,7 +219,7 @@ export const PriceTableEnhanced = (props: Props) => {
 					return response.json();
 				})
 				.then((data) => {
-					setRows(data.items.map(createData));
+					setRows(data.items.map((datum) => createData(datum, props.location)));
 				});
 	}, [props.location]);
 
@@ -215,7 +243,10 @@ export const PriceTableEnhanced = (props: Props) => {
 								<TableCell align='left'>{row.name}</TableCell>
 								<TableCell align='right'>{row.price}</TableCell>
 								<TableCell align='right'>{row.direction}</TableCell>
-								<TableCell align='right'>{row.caracteristicas}</TableCell>
+								<TableCell align='right'>{`${(row.distance / 1000).toFixed(
+									2
+								)} km`}</TableCell>
+								<TableCell align='right'>{row.characteristics}</TableCell>
 								<TableCell align='right'>{row.labour_data}</TableCell>
 								<TableCell align='right'>{row.coordinates}</TableCell>
 							</TableRow>
