@@ -68,10 +68,11 @@ def to_WKTElement(point):
 
 
 def find_closest_gasstations(origin, page):
+    print(origin, page)
     if page is None:
         page = 1
     result = db.session\
         .query(GasStation).order_by(func.ST_Distance(GasStation.coordinates, cast(to_WKTElement(origin), Geography(srid=4269))))\
-        .paginate(int(page), 20)
+        .paginate(page, 20)
     db.session.commit()
     return result

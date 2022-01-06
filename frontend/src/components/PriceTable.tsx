@@ -384,7 +384,6 @@ export const PriceTableEnhanced = (props: Props) => {
 											row.coordinates.split(',')[1]
 										}`}
 										component={RouterLink}
-										sx={{ margin: '2em', flex: '1em' }}
 									>
 										See on map
 									</Link>
