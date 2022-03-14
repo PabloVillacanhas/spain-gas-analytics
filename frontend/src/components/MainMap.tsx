@@ -9,6 +9,9 @@ import { carburantsNamesMap } from '../constants';
 import { useGeolocation } from '../hooks';
 import { useLocation } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import IconButton from '@mui/material/IconButton';
+import { borderColor } from '@mui/system';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -96,29 +99,30 @@ const MainMap = () => {
 		},
 	});
 	const [analitycs, setAnalitycs] = useState<any>();
+	const [showFilters, setShowFilters] = useState<boolean>(false);
 
-	useEffect(() => {
-		fetch('http://localhost:5000/api/v1/gas_stations')
-			.then((response) => {
-				return response.json();
-			})
-			.then((data) => {
-				data = data.map((item) => {
-					return {
-						feature: {
-							...item.coordinates,
-							properties: {
-								sale_type: item.sale_type,
-								service_type: item.service_type,
-								name: item.name,
-								prices: item.last_price[0] || [],
-							},
-						},
-					};
-				});
-				setResults(data);
-			});
-	}, []);
+	// useEffect(() => {
+	// 	fetch('http://localhost:5000/api/v1/gas_stations')
+	// 		.then((response) => {
+	// 			return response.json();
+	// 		})
+	// 		.then((data) => {
+	// 			data = data.map((item) => {
+	// 				return {
+	// 					feature: {
+	// 						...item.coordinates,
+	// 						properties: {
+	// 							sale_type: item.sale_type,
+	// 							service_type: item.service_type,
+	// 							name: item.name,
+	// 							prices: item.last_price[0] || [],
+	// 						},
+	// 					},
+	// 				};
+	// 			});
+	// 			setResults(data);
+	// 		});
+	// }, []);
 
 	const onMapLoad = useCallback(() => {
 		if (mapRef.current && deckRef.current) {
@@ -317,9 +321,27 @@ const MainMap = () => {
 						onLoad={onMapLoad}
 					/>
 				)}
-				<MapFilterGasStations
-					onFilterChange={(filter: MapFilterParams) => setFilter(filter)}
-				></MapFilterGasStations>
+				{showFilters && (
+					<MapFilterGasStations
+						onFilterChange={(filter: MapFilterParams) => setFilter(filter)}
+					></MapFilterGasStations>
+				)}
+				{!results && (
+					<IconButton
+						color='primary'
+						size='large'
+						style={{
+							position: 'absolute',
+							bottom: '1em',
+							left: '1em',
+							zIndex: 1,
+							backgroundColor: 'white',
+						}}
+						onClick={() => setShowFilters(true)}
+					>
+						<FilterAltIcon />
+					</IconButton>
+				)}
 			</DeckGL>
 		</div>
 	);

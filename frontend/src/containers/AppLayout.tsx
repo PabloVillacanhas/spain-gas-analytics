@@ -19,7 +19,16 @@ export const AppLayout = () => {
 			</AppBar>
 			<Drawer></Drawer>
 			<Box component='main' sx={{ width: '100%', height: '100vh' }}>
-				<Toolbar />
+				<AppBar
+					position='fixed'
+					sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+				>
+					<Toolbar>
+						<Typography variant='h6' noWrap component='div'>
+							Spain gas prices dashboard
+						</Typography>
+					</Toolbar>
+				</AppBar>
 				<Outlet />
 			</Box>
 		</Box>
