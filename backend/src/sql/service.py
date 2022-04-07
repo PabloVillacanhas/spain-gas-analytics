@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from sqlalchemy.sql.elements import and_
 from sqlalchemy.sql.operators import desc_op
@@ -12,15 +13,18 @@ from geoalchemy2.types import Geography
 from sqlalchemy.sql import cast
 
 
-def persist(gas_stations: list[GasStation]):
+def persist(gas_stations: List[GasStation]):
     for idx, gas_station in enumerate(gas_stations):
         gs = db.session.query(GasStation).get(gas_station.id)
+        print(idx, "--", len(gas_stations))
         if not (gs):
             db.session.add(gas_station)
-            db.session.commit()
+            if idx % 100 == 0:
+                db.session.commit()
             continue
         gs.prices.extend(gas_station.new_prices)
-        print(idx, "--", len(gas_stations))
+        if idx % 100 == 0:
+            db.session.commit()
     db.session.commit()
 
 

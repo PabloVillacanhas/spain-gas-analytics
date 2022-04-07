@@ -9,6 +9,8 @@ COPY backend backend
 WORKDIR /usr/local/app/backend
 RUN pipenv install --system
 ENV PYTHONPATH=/usr/local/app/backend/src
+COPY ./backend/scalegrid.crt /etc/ssl/certs/scalegrid.crt
+ENV DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
 EXPOSE 5000
 
 FROM base as scrapper

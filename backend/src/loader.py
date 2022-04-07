@@ -1,6 +1,6 @@
 import logging
 import os
-from dotenv.main import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 from sql.service import persist as insert_in_postgres, get_last_price_date
 from spider.service import fetch
@@ -27,8 +27,7 @@ def fetch_and_persist():
 
 if __name__ == '__main__':
     app = Flask(__name__)
-    if os.environ.get('FLASK_ENV') == 'development':
-        load_dotenv()
+    load_dotenv()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = {
         os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')}
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')

@@ -2,7 +2,7 @@ from sql.models import GasStation, Prices
 from mytypes import RestResponse
 from datetime import datetime
 import pytz
-
+from typing import List
 
 def transform_to_float(value):
     return float(value.replace(',', '.')) if bool(value) else None
@@ -15,7 +15,7 @@ def transform_to_utc_datetime(value):
     return date_aware.astimezone(pytz.utc)
 
 
-def rest_response_to_normalized(data: RestResponse) -> list[GasStation]:
+def rest_response_to_normalized(data: RestResponse) -> List[GasStation]:
     """
 
     :rtype: list[GasStation]

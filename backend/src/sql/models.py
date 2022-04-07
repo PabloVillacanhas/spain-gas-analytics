@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from geoalchemy2.types import Geometry
 from datetime import datetime
-
 from . import db
 
 
@@ -23,7 +22,7 @@ class GasStation(db.Model):
     remision = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
     sale_type = db.Column(db.String, nullable=False)
-    service_type = db.Column(db.String, nullable=False)
+    service_type = db.Column(db.String, nullable=True)
     perc_bioeth = db.Column(db.Float, nullable=False)
     perc_metil_ester = db.Column(db.Float, nullable=False)
     prices = db.relationship("Prices", backref='gasstations', lazy='dynamic')
@@ -49,12 +48,14 @@ class GasStation(db.Model):
         self.perc_bioeth = perf_bioeth
         self.perc_metil_ester = perc_metil_ester
 
+
 @dataclass
 class Prices(db.Model):
     __tablename__ = 'prices'
 
     date = db.Column(db.DateTime, nullable=True, primary_key=True)
-    gasstation_id = db.Column(db.Integer, db.ForeignKey(GasStation.id), primary_key=True)
+    gasstation_id = db.Column(db.Integer, db.ForeignKey(
+        GasStation.id), primary_key=True)
     biodiesel = db.Column(db.Float, nullable=True)
     bioethanol = db.Column(db.Float, nullable=True)
     compressed_natgas = db.Column(db.Float, nullable=True)
@@ -92,4 +93,4 @@ class Prices(db.Model):
 
 
 def create_schema():
-    db.Base.metadata.create_all(db.engine)
+    db.metadata.create_all(db.engine)
