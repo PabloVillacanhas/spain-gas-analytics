@@ -17,7 +17,14 @@ const PriceChart = (props: PriceChartProps) => {
 	const primaryAxis = React.useMemo(
 		(): AxisOptions<Datum> => ({
 			getValue: (datum) => datum.x,
-			scaleType: 'localTime',
+			scaleType: 'time',
+			formatters: {
+				tooltip: (val) =>
+					Intl.DateTimeFormat('en-GB', {
+						month: 'short',
+						day: '2-digit',
+					}).format(val),
+			},
 		}),
 		[]
 	);

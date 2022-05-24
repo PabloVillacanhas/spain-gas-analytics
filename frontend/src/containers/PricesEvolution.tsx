@@ -18,7 +18,7 @@ export const PricesEvolution = (props: Props) => {
 				});
 			return acc;
 		}, []);
-		return [{ label: type, data: dataparsed }];
+		return [{ label: carburantsNamesMap[type], data: dataparsed }];
 	};
 
 	return (
@@ -27,6 +27,7 @@ export const PricesEvolution = (props: Props) => {
 			{data &&
 				Object.keys(carburantsNamesMap).map((c) => (
 					<PriceChart
+						key={c}
 						title={carburantsNamesMap[c]}
 						data={adapter(c)}
 					></PriceChart>
