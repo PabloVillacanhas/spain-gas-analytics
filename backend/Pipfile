@@ -25,7 +25,7 @@ gunicorn = "*"
 python-dotenv = "*"
 
 [requires]
-python_version = "3.9.5"
+python_version = ">=python 3.7"
 
 [scripts]
-loader = "python3 loader.py"
+loader = "python3 src/loader.py"

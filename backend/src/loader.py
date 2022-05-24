@@ -21,6 +21,7 @@ def fetch_and_persist():
         logging.info("Fetching remote data given by government")
         logging.info("Persisting in postgres the data")
         insert_in_postgres(rest_response_to_normalized(rest_response))
+        logging.info("Updated database!")
     else:
         logging.info("Database is updated")
 
@@ -30,6 +31,7 @@ if __name__ == '__main__':
     load_dotenv()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = {
         os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')}
+    print(os.environ.get('DATABASE_URL'))
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     db.init_app(app)
     initConfiguration()
