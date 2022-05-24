@@ -11,7 +11,7 @@ export const PricesComparision = (props: Props) => {
 	const [analytics, setAnalytics] = useState([]);
 
 	useEffect(() => {
-		fetch('http://localhost:5000/api/v1/analytics/prices_evolution')
+		fetch(`http://${HOST_API}/api/v1/analytics/prices_evolution`)
 			.then((response) => {
 				return response.json();
 			})
@@ -32,7 +32,6 @@ export const PricesComparision = (props: Props) => {
 			);
 			data.push({ label: type, data: datums });
 		});
-		console.log(`data`, data);
 		return data;
 	};
 

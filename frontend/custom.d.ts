@@ -7,3 +7,5 @@ declare module '*.jpeg' {
 	const content: any
 	export default content
 }
+
+declare var HOST_API: string;

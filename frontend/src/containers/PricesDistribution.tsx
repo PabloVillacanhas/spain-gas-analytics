@@ -14,7 +14,7 @@ export const PricesDistribution = (props: Props) => {
 	const [results, setResults] = useState<Array<Map<string, number>>>();
 
 	useEffect(() => {
-		fetch('http://localhost:5000/api/v1/analytics/prices')
+		fetch(`http://${HOST_API}/api/v1/analytics/prices`)
 			.then((response) => {
 				return response.json();
 			})

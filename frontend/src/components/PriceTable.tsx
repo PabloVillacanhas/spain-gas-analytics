@@ -229,7 +229,7 @@ export const PriceTableEnhanced = (props: Props) => {
 	useEffect(() => {
 		props.location &&
 			fetch(
-				`http://localhost:5000/api/v1/gas_stations?near=${props.location.longitude},${props.location.latitude}`
+				`http://${HOST_API}/api/v1/gas_stations?near=${props.location.longitude},${props.location.latitude}`
 			)
 				.then((response) => {
 					return response.json();

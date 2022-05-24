@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+var webpack = require('webpack');
+
 
 module.exports = {
 	mode: "development",
@@ -53,6 +55,13 @@ module.exports = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: path.join(__dirname, "public", "index.html")
+		}),
+		new webpack.DefinePlugin({
+			HOST_API: process.env.NODE_ENV === 'production' ? 'fuck you' : JSON.stringify('localhost:5001'),
+			VERSION: JSON.stringify('5fa3b9'),
+			BROWSER_SUPPORTS_HTML5: true,
+			TWO: '1+1',
+			'typeof window': JSON.stringify('object'),
 		}),
 	],
 }

@@ -244,7 +244,6 @@ const MainMap = () => {
 				newAnalitycs[`main_${type}`] = main;
 				newAnalitycs[`std_deviation_${type}`] = stdDeviation;
 			});
-			console.log(`analitycs`, analitycs);
 			setAnalitycs({ ...analitycs, ...newAnalitycs });
 		}
 	}, [results, filter]);
