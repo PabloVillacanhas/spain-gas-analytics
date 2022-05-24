@@ -23,9 +23,10 @@ flask_sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 gunicorn = "*"
 python-dotenv = "*"
+flask-cors = "*"
 
 [requires]
-python_version = ">=python 3.7"
+python_version = "*"
 
 [scripts]
 loader = "python3 src/loader.py"
