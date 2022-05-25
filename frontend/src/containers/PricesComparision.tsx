@@ -4,6 +4,7 @@ import PriceChart, {
 	Datum,
 	PriceEvolutionData,
 } from '../components/PriceChart';
+import { getApiServerDomain } from '../constants';
 
 interface Props {}
 
@@ -11,7 +12,7 @@ export const PricesComparision = (props: Props) => {
 	const [analytics, setAnalytics] = useState([]);
 
 	useEffect(() => {
-		fetch(`http://${HOST_API}/api/v1/analytics/prices_evolution`)
+		fetch(`http://${getApiServerDomain()}/api/v1/analytics/prices_evolution`)
 			.then((response) => {
 				return response.json();
 			})

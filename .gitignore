@@ -4,7 +4,7 @@ postgres_data
 __pycache__/
 frontend/node_modules
 # Generated client
-src/backend/client*
+backend/src/client
 # Created by https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pythonvanilla,pycharm
 
@@ -289,3 +289,4 @@ cython_debug/
 /modules.xml
 /inspectionProfiles/profiles_settings.xml
 /dictionaries/situm.xml
+

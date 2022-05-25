@@ -22,6 +22,7 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import HTMLTooltip from './HTMLTooltip';
+import { getApiServerDomain } from '../constants';
 
 type Item = {
 	coordinates: {
@@ -229,7 +230,9 @@ export const PriceTableEnhanced = (props: Props) => {
 	useEffect(() => {
 		props.location &&
 			fetch(
-				`http://${HOST_API}/api/v1/gas_stations?near=${props.location.longitude},${props.location.latitude}`
+				`http://${getApiServerDomain()}/api/v1/gas_stations?near=${
+					props.location.longitude
+				},${props.location.latitude}`
 			)
 				.then((response) => {
 					return response.json();

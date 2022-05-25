@@ -13,3 +13,10 @@ export const carburantsNamesMap = {
 	liq_gas_from_oil: 'Liquid gas from oil',
 	liq_natgas: 'Liq natgas from oil',
 };
+
+export const getApiServerDomain = () => {
+	if (process.env.NODE_ENV === 'development') {
+		return 'localhost:5001';
+	}
+	return window.location.hostname;
+}
