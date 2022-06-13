@@ -68,7 +68,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 				display: 'flex',
 				backgroundColor: 'rgb(255 255 255 / 65%)',
 				maxWidth: '75%',
-				margin: '0 auto',
+				margin: '64px auto',
 				borderRadius: '4px',
 			}}
 		>
