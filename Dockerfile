@@ -5,6 +5,8 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 RUN pip3 install pipenv
 COPY backend backend
+RUN ls -la
+RUN ls ..
 WORKDIR /usr/local/app/backend
 RUN pipenv install
 ENV PYTHONPATH=/usr/local/app/backend/src
