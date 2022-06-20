@@ -8,7 +8,7 @@ export type FeedItem = {
 		}
 
 async function getExpansionRss(): Promise<Array<FeedItem>> {
-	const res = await fetch(`https://e00-expansion.uecdn.es/rss/economia.xml`);
+	const res = await fetch(`https://e00-expansion.uecdn.es/rss/economia.xml`, { mode: 'no-cors'});
 	const str = await res.text();
 	const feed = new window.DOMParser().parseFromString(str, 'text/xml');
 	const nodelist = feed.querySelectorAll('item');
@@ -36,7 +36,7 @@ async function getExpansionRss(): Promise<Array<FeedItem>> {
 }
 
 async function getEuropaPressRss(): Promise<Array<FeedItem>> {
-	return fetch(`https://www.europapress.es/rss/rss.aspx?buscar=diesel`)
+	return fetch(`https://www.europapress.es/rss/rss.aspx?buscar=diesel`, { mode: 'no-cors'})
 		.then(res => res.text().then(
 		str => {	
 			const feed = new window.DOMParser().parseFromString(str, 'text/xml');
