@@ -165,7 +165,7 @@ const headCells: readonly HeadCell[] = [
 		id: 'calculate',
 		numeric: false,
 		disablePadding: false,
-		label: 'Calculate',
+		label: 'Quantity (Liters)',
 		variant: 'head',
 	},
 ];
