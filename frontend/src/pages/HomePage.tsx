@@ -1,13 +1,4 @@
-import {
-	Box,
-	CircularProgress,
-	Container,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
-} from '@mui/material';
+import { Box, CircularProgress, Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import PriceBox from '../components/PriceBox';
 import { useGetPriceEvolutionQuery } from '../services/analytics';
