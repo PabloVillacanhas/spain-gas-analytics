@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
 	TableContainer,
 	Paper,
@@ -23,7 +23,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import HTMLTooltip from './HTMLTooltip';
 import { getApiServerDomain } from '../constants';
-import { calculateProvidedBy } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
+import MapIcon from '@mui/icons-material/Map';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -156,12 +156,6 @@ const headCells: readonly HeadCell[] = [
 		variant: 'head',
 	},
 	{
-		id: 'coordinates',
-		numeric: false,
-		disablePadding: false,
-		label: 'See on map',
-	},
-	{
 		id: 'calculate',
 		numeric: false,
 		disablePadding: false,
@@ -233,6 +227,7 @@ interface Props {
 }
 
 export const PriceTableEnhanced = (props: Props) => {
+	let navigate = useNavigate();
 	const [data, setData] = useState<any>();
 	const [order, setOrder] = React.useState<Order>('asc');
 	const [orderBy, setOrderBy] = React.useState<keyof Row>('price');
@@ -313,7 +308,6 @@ export const PriceTableEnhanced = (props: Props) => {
 		title: string,
 		serviceType: Map<string, string[]>
 	) => {
-		console.log(`object`, serviceType);
 		return (
 			<>
 				<Typography color='inherit'>{title}</Typography>
@@ -350,7 +344,25 @@ export const PriceTableEnhanced = (props: Props) => {
 							>
 								<TableCell align='left'>{row.name}</TableCell>
 								<TableCell align='right'>{row.price}</TableCell>
-								<TableCell align='left'>{row.direction}</TableCell>
+								<TableCell align='left'>
+									<Box
+										sx={{
+											display: 'flex',
+											alignItems: 'center',
+											cursor: 'pointer',
+										}}
+										onClick={() =>
+											navigate(
+												`/map?location=${row.coordinates.split(',')[0]},${
+													row.coordinates.split(',')[1]
+												}`
+											)
+										}
+									>
+										{row.direction}
+										<MapIcon sx={{ marginLeft: '0.75rem' }}></MapIcon>
+									</Box>
+								</TableCell>
 								<TableCell align='right'>{`${(row.distance / 1000).toFixed(
 									2
 								)} km`}</TableCell>
@@ -411,16 +423,6 @@ export const PriceTableEnhanced = (props: Props) => {
 									{row.labour_data.split(';').map((v) => (
 										<div>{v}</div>
 									))}
-								</TableCell>
-								<TableCell align='left'>
-									<Link
-										to={`/map?location=${row.coordinates.split(',')[0]},${
-											row.coordinates.split(',')[1]
-										}`}
-										component={RouterLink}
-									>
-										See on map
-									</Link>
 								</TableCell>
 								<TableCell align='left'>{row.calculate}</TableCell>
 							</TableRow>

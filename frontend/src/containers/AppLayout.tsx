@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, AppBar, Toolbar, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Drawer from '../components/Drawer';
-import { width } from '@mui/system';
 
 export const AppLayout = () => {
 	return (
