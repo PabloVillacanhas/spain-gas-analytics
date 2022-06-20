@@ -6,7 +6,7 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 RUN pip3 install pipenv
 COPY backend backend
 WORKDIR /usr/local/app/backend
-RUN pipenv install --system
+RUN pipenv install
 ENV PYTHONPATH=/usr/local/app/backend/src
 COPY ./backend/scalegrid.crt /etc/ssl/certs/scalegrid.crt
 EXPOSE 5001
