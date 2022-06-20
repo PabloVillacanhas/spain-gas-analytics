@@ -15,4 +15,5 @@ FROM base as scrapper
 ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
 
 FROM base as app
-ENTRYPOINT []
+RUN ls
+ENTRYPOINT ["sh", "entrypoint.sh", "app"]
