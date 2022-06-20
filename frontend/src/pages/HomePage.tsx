@@ -1,5 +1,6 @@
 import {
 	Box,
+	CircularProgress,
 	Container,
 	FormControl,
 	InputLabel,
@@ -42,8 +43,9 @@ const carburantsNamesMap = {
 const HomePage = () => {
 	const { data } = useGetPriceEvolutionQuery(null);
 
-	const { geolocationPosition } = useGeolocation(); //Here it is Just to ask for permissions
+	const { geolocationPosition, error } = useGeolocation(); //Here it is Just to ask for permissions
 
+	console.log('geolocationPosition :>> ', geolocationPosition);
 	const { preferredCarburant } = useSelector(
 		(state: RootState) => state.priceCalculator
 	);
@@ -104,9 +106,18 @@ const HomePage = () => {
 						alignItems: 'center',
 					}}
 				>
-					<PublicOffIcon sx={{ color: red[500] }}></PublicOffIcon> Please enable
-					the geolocation to see the list of the cheapest gas stations in your
-					zone
+					{error ? (
+						<>
+							<PublicOffIcon sx={{ color: red[500] }}></PublicOffIcon> Please
+							enable the geolocation to see the list of the cheapest gas
+							stations in your zone
+						</>
+					) : (
+						<>
+							<CircularProgress sx={{ marginRight: '0.75rem' }} /> Loading gas
+							stations nearby
+						</>
+					)}
 				</Box>
 			)}
 			<Box>
