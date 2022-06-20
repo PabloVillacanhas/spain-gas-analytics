@@ -10,7 +10,6 @@ import {
 	TableBody,
 	Box,
 	TableSortLabel,
-	Link,
 	Tooltip,
 	Typography,
 } from '@mui/material';
