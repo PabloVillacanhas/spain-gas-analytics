@@ -6,6 +6,7 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 RUN pip3 install pipenv
 COPY backend backend
 RUN ls -la
+RUN ls backend
 RUN ls ..
 WORKDIR /usr/local/app/backend
 RUN pipenv install
