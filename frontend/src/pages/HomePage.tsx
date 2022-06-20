@@ -1,5 +1,12 @@
-import React from 'react';
-import { Box, Container } from '@mui/material';
+import {
+	Box,
+	Container,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+} from '@mui/material';
 import Paper from '@mui/material/Paper';
 import PriceBox from '../components/PriceBox';
 import { useGetPriceEvolutionQuery } from '../services/analytics';
@@ -7,6 +14,12 @@ import { useGeolocation } from '../hooks';
 import { PriceTableEnhanced } from '../components/PriceTable';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
 import { red } from '@mui/material/colors';
+import {
+	changePayment,
+	changePreferredCarburant,
+} from '../store/priceCalculatorSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
@@ -25,9 +38,14 @@ const carburantsNamesMap = {
 };
 
 const HomePage = () => {
-	const { data, error, isLoading } = useGetPriceEvolutionQuery(null);
+	const { data } = useGetPriceEvolutionQuery(null);
 
 	const { geolocationPosition } = useGeolocation(); //Here it is Just to ask for permissions
+
+	const { payment, preferredCarburant } = useSelector(
+		(state: RootState) => state.priceCalculator
+	);
+	const dispatch = useDispatch();
 
 	const adapter = (item) => {
 		const dataparsed: Array<any> = data.reduce((acc: any, curr: any) => {
@@ -48,9 +66,56 @@ const HomePage = () => {
 				{Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(new Date())}
 			</h1>
 			{geolocationPosition ? (
-				<PriceTableEnhanced
-					location={geolocationPosition?.coords}
-				></PriceTableEnhanced>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+					}}
+				>
+					<Box
+						sx={{
+							flex: 3,
+						}}
+					>
+						<PriceTableEnhanced
+							location={geolocationPosition?.coords}
+						></PriceTableEnhanced>
+					</Box>
+					<Box
+						sx={{
+							flex: 1,
+							padding: '1em',
+						}}
+					>
+						<h2>Price calculator</h2>
+						<TextField
+							id='payment'
+							label='Payment (€)'
+							type='number'
+							value={payment}
+							onChange={(e) => {
+								dispatch(changePayment(+e.target.value));
+							}}
+						/>
+						<FormControl>
+							<InputLabel id='gasttype-select-label'>Gas type</InputLabel>
+							<Select
+								labelId='gasttype-select-label'
+								id='gasttype-select'
+								value={preferredCarburant}
+								label='gasType'
+								name='gasType'
+								onChange={(e) =>
+									dispatch(changePreferredCarburant(e.target.value))
+								}
+							>
+								{Object.keys(carburantsNamesMap).map((c) => (
+									<MenuItem value={c}>{carburantsNamesMap[c]}</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Box>
+				</Box>
 			) : (
 				<Box
 					sx={{
@@ -116,11 +181,6 @@ const HomePage = () => {
 			<Paper variant='outlined' square>
 				<Container></Container>
 			</Paper>
-			{/* <Paper variant='outlined' square>
-					<Container>
-						<h1>Gas stations</h1>
-					</Container>
-				</Paper> */}
 		</Container>
 	);
 };

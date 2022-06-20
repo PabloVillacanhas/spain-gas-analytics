@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
 	TableContainer,
@@ -23,6 +23,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import HTMLTooltip from './HTMLTooltip';
 import { getApiServerDomain } from '../constants';
+import { calculateProvidedBy } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 type Item = {
 	coordinates: {
@@ -52,9 +55,10 @@ type Row = {
 	distance: number;
 	labour_data: string;
 	coordinates: string;
+	calculate: number;
 };
 
-function createData(row: Item, origin: GeolocationCoordinates): Row {
+function createData(row: Item, origin: GeolocationCoordinates, payment): Row {
 	return {
 		name: row.name,
 		price: row.last_price[0].diesel_a,
@@ -69,6 +73,7 @@ function createData(row: Item, origin: GeolocationCoordinates): Row {
 			{ lng: origin.longitude, lat: origin.latitude }
 		),
 		coordinates: `${row.coordinates.geometry.coordinates[0]},${row.coordinates.geometry.coordinates[1]}`,
+		calculate: +(payment / row.last_price[0].diesel_a).toFixed(3),
 	};
 }
 
@@ -102,6 +107,7 @@ interface HeadCell {
 	label: string;
 	numeric: boolean;
 	sortable?: boolean;
+	variant?: string;
 }
 
 const headCells: readonly HeadCell[] = [
@@ -110,6 +116,7 @@ const headCells: readonly HeadCell[] = [
 		numeric: false,
 		disablePadding: false,
 		label: 'Name',
+		variant: 'head',
 	},
 	{
 		id: 'price',
@@ -117,12 +124,14 @@ const headCells: readonly HeadCell[] = [
 		disablePadding: false,
 		label: 'Price',
 		sortable: true,
+		variant: 'head',
 	},
 	{
 		id: 'direction',
 		numeric: false,
 		disablePadding: false,
 		label: 'Direction',
+		variant: 'head',
 	},
 	{
 		id: 'distance',
@@ -130,24 +139,34 @@ const headCells: readonly HeadCell[] = [
 		disablePadding: false,
 		label: 'Distance',
 		sortable: true,
+		variant: 'head',
 	},
 	{
 		id: 'characteristics',
 		numeric: false,
 		disablePadding: false,
 		label: 'Characteristics',
+		variant: 'head',
 	},
 	{
 		id: 'labour_data',
 		numeric: false,
 		disablePadding: false,
 		label: 'Labour data',
+		variant: 'head',
 	},
 	{
 		id: 'coordinates',
 		numeric: false,
 		disablePadding: false,
 		label: 'See on map',
+	},
+	{
+		id: 'calculate',
+		numeric: false,
+		disablePadding: false,
+		label: 'Calculate',
+		variant: 'head',
 	},
 ];
 
@@ -214,9 +233,12 @@ interface Props {
 }
 
 export const PriceTableEnhanced = (props: Props) => {
-	const [rows, setRows] = useState<Array<Row>>();
+	const [data, setData] = useState<any>();
 	const [order, setOrder] = React.useState<Order>('asc');
 	const [orderBy, setOrderBy] = React.useState<keyof Row>('price');
+	const { payment, preferredCarburant } = useSelector(
+		(state: RootState) => state.priceCalculator
+	);
 
 	const handleRequestSort = (
 		event: React.MouseEvent<unknown>,
@@ -226,6 +248,13 @@ export const PriceTableEnhanced = (props: Props) => {
 		setOrder(isAsc ? 'desc' : 'asc');
 		setOrderBy(property);
 	};
+
+	const rows = useMemo(
+		() =>
+			data &&
+			data.items?.map((datum) => createData(datum, props.location, payment)),
+		[data, payment]
+	);
 
 	useEffect(() => {
 		props.location &&
@@ -237,10 +266,8 @@ export const PriceTableEnhanced = (props: Props) => {
 				.then((response) => {
 					return response.json();
 				})
-				.then((data) => {
-					setRows(data.items.map((datum) => createData(datum, props.location)));
-				});
-	}, [props.location]);
+				.then(setData);
+	}, [props.location, preferredCarburant]);
 
 	type TimetableService = Map<'A' | 'P' | 'D', Map<string, string[]>>;
 
@@ -306,7 +333,7 @@ export const PriceTableEnhanced = (props: Props) => {
 
 	return (
 		<TableContainer component={Paper}>
-			<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+			<Table aria-label='simple table'>
 				<EnhancedTableHead
 					order={order}
 					orderBy={orderBy}
@@ -380,7 +407,11 @@ export const PriceTableEnhanced = (props: Props) => {
 										</Tooltip>
 									)}
 								</TableCell>
-								<TableCell align='left'>{row.labour_data}</TableCell>
+								<TableCell align='left'>
+									{row.labour_data.split(';').map((v) => (
+										<div>{v}</div>
+									))}
+								</TableCell>
 								<TableCell align='left'>
 									<Link
 										to={`/map?location=${row.coordinates.split(',')[0]},${
@@ -391,6 +422,7 @@ export const PriceTableEnhanced = (props: Props) => {
 										See on map
 									</Link>
 								</TableCell>
+								<TableCell align='left'>{row.calculate}</TableCell>
 							</TableRow>
 						))}
 				</TableBody>

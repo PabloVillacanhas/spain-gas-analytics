@@ -101,28 +101,28 @@ const MainMap = () => {
 	const [analitycs, setAnalitycs] = useState<any>();
 	const [showFilters, setShowFilters] = useState<boolean>(false);
 
-	// useEffect(() => {
-	// 	fetch('http://localhost:5000/api/v1/gas_stations')
-	// 		.then((response) => {
-	// 			return response.json();
-	// 		})
-	// 		.then((data) => {
-	// 			data = data.map((item) => {
-	// 				return {
-	// 					feature: {
-	// 						...item.coordinates,
-	// 						properties: {
-	// 							sale_type: item.sale_type,
-	// 							service_type: item.service_type,
-	// 							name: item.name,
-	// 							prices: item.last_price[0] || [],
-	// 						},
-	// 					},
-	// 				};
-	// 			});
-	// 			setResults(data);
-	// 		});
-	// }, []);
+	useEffect(() => {
+		fetch('http://localhost:5001/api/v1/gas_stations')
+			.then((response) => {
+				return response.json();
+			})
+			.then((data) => {
+				data = data.map((item) => {
+					return {
+						feature: {
+							...item.coordinates,
+							properties: {
+								sale_type: item.sale_type,
+								service_type: item.service_type,
+								name: item.name,
+								prices: item.last_price[0] || [],
+							},
+						},
+					};
+				});
+				setResults(data);
+			});
+	}, []);
 
 	const onMapLoad = useCallback(() => {
 		if (mapRef.current && deckRef.current) {

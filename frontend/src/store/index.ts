@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import {analyticsApi} from '../services/analytics'
 import configurationReducer from './configurationSlice'
+import priceCalculatorSlice from './priceCalculatorSlice'
 
 export const store = configureStore({
   reducer: {
     configuration: configurationReducer,
+    priceCalculator: priceCalculatorSlice,
     [analyticsApi.reducerPath]: analyticsApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(analyticsApi.middleware),

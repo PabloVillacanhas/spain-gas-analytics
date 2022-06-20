@@ -6,7 +6,7 @@ import { AppLayout } from './containers/AppLayout';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainMap from './components/MainMap';
 import HomePage from './pages/HomePage';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { Analytics } from './containers/Analytics';
 import { Provider } from 'react-redux';
 import { store } from './store';
@@ -57,6 +57,7 @@ ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<ThemeProvider theme={theme}>
+				<CssBaseline />
 				<BrowserRouter>
 					<Routes>
 						<Route path='/' element={<AppLayout />}>
