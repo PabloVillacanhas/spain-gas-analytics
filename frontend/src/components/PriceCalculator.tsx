@@ -25,8 +25,6 @@ const PriceCalculator = (props: Props) => {
 
 	const dispatch = useDispatch();
 
-	console.log('props :>> ', props);
-
 	return (
 		<>
 			<h2>Price calculator</h2>

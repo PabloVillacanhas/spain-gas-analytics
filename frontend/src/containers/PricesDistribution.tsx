@@ -38,7 +38,6 @@ export const PricesDistribution = (props: Props) => {
 				},
 				[Infinity, -1]
 			);
-		console.log('pricesAggregated :>> ', pricesAggregated);
 		const data: UserSerie<TDatum>[] = [
 			{
 				label: 'num',
@@ -50,7 +49,6 @@ export const PricesDistribution = (props: Props) => {
 					})),
 			},
 		];
-		console.log('data :>> ', data);
 		return data;
 	};
 

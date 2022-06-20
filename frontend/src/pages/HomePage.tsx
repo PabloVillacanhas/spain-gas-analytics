@@ -45,7 +45,6 @@ const HomePage = () => {
 
 	const { geolocationPosition, error } = useGeolocation(); //Here it is Just to ask for permissions
 
-	console.log('geolocationPosition :>> ', geolocationPosition);
 	const { preferredCarburant } = useSelector(
 		(state: RootState) => state.priceCalculator
 	);
