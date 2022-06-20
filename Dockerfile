@@ -7,7 +7,7 @@ RUN pip3 install pipenv
 WORKDIR /usr/local/app/backend
 COPY backend .
 RUN ls
-RUN pipenv install
+RUN pipenv install --system
 ENV PYTHONPATH=/usr/local/app/backend/src
 COPY ./backend/scalegrid.crt /etc/ssl/certs/scalegrid.crt
 EXPOSE 5001
