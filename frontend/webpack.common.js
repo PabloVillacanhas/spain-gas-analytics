@@ -1,8 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
-
-console.log(process.env.NODE_ENV)
 module.exports = {
 	entry: path.join(__dirname, "src", "index.tsx"),
 	devtool: 'inline-source-map',

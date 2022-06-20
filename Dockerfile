@@ -6,7 +6,6 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 RUN pip3 install pipenv
 WORKDIR /usr/local/app/backend
 COPY backend .
-RUN ls
 RUN pipenv install --system
 ENV PYTHONPATH=/usr/local/app/backend/src
 COPY ./backend/scalegrid.crt /etc/ssl/certs/scalegrid.crt
@@ -16,5 +15,3 @@ FROM base as scrapper
 ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
 
 FROM base as app
-RUN ls
-ENTRYPOINT ["sh", "entrypoint.sh", "app"]

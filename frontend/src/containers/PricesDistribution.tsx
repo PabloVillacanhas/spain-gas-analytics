@@ -31,8 +31,6 @@ export const PricesDistribution = (props: Props) => {
 			.filter((r) => Boolean(r))
 			.forEach(
 				(curr: number) => {
-					console.log(curr);
-					const key = curr.toFixed(2);
 					const value = pricesAggregated.get(key) || 0;
 					pricesAggregated.set(key, value + 1);
 				},
