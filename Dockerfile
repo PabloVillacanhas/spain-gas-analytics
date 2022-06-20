@@ -15,4 +15,4 @@ FROM base as scrapper
 ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
 
 FROM base as app
-ENTRYPOINT ["sh", "entrypoint.sh", "app"]
+ENTRYPOINT ["sh", "backend/entrypoint.sh", "app"]

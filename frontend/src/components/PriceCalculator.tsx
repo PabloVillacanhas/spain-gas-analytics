@@ -5,7 +5,6 @@ import {
 	Select,
 	MenuItem,
 } from '@mui/material';
-import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { carburantsNamesMap } from '../constants';
 import { RootState } from '../store';
