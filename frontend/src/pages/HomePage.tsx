@@ -20,6 +20,8 @@ import {
 } from '../store/priceCalculatorSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
+import PriceCalculator from '../components/PriceCalculator';
+import PriceChart from '../components/PriceChart';
 
 const carburantsNamesMap = {
 	biodiesel: 'Biodiesel',
@@ -42,10 +44,9 @@ const HomePage = () => {
 
 	const { geolocationPosition } = useGeolocation(); //Here it is Just to ask for permissions
 
-	const { payment, preferredCarburant } = useSelector(
+	const { preferredCarburant } = useSelector(
 		(state: RootState) => state.priceCalculator
 	);
-	const dispatch = useDispatch();
 
 	const adapter = (item) => {
 		const dataparsed: Array<any> = data.reduce((acc: any, curr: any) => {
@@ -87,33 +88,12 @@ const HomePage = () => {
 							padding: '1em',
 						}}
 					>
-						<h2>Price calculator</h2>
-						<TextField
-							id='payment'
-							label='Payment (€)'
-							type='number'
-							value={payment}
-							onChange={(e) => {
-								dispatch(changePayment(+e.target.value));
-							}}
-						/>
-						<FormControl>
-							<InputLabel id='gasttype-select-label'>Gas type</InputLabel>
-							<Select
-								labelId='gasttype-select-label'
-								id='gasttype-select'
-								value={preferredCarburant}
-								label='gasType'
-								name='gasType'
-								onChange={(e) =>
-									dispatch(changePreferredCarburant(e.target.value))
-								}
-							>
-								{Object.keys(carburantsNamesMap).map((c) => (
-									<MenuItem value={c}>{carburantsNamesMap[c]}</MenuItem>
-								))}
-							</Select>
-						</FormControl>
+						<PriceCalculator data={data} />
+						<h2>Price evolution</h2>
+						<PriceChart
+							key={preferredCarburant}
+							data={adapter(preferredCarburant)}
+						></PriceChart>
 					</Box>
 				</Box>
 			) : (

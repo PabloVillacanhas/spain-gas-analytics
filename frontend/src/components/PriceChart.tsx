@@ -47,14 +47,16 @@ const PriceChart = (props: PriceChartProps) => {
 				height: '400px',
 			}}
 		>
-			<div
-				style={{
-					flex: '0 0 auto',
-					padding: '10px',
-				}}
-			>
-				<h3>{props.title}</h3>
-			</div>
+			{props.title && (
+				<div
+					style={{
+						flex: '0 0 auto',
+						padding: '10px',
+					}}
+				>
+					<h3>{props.title}</h3>
+				</div>
+			)}
 			<div
 				style={{
 					flex: 2,
