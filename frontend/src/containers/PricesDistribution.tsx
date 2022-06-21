@@ -1,7 +1,7 @@
 import { Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { AxisBandOptions, Chart, UserSerie } from 'react-charts';
-import { getApiServerDomain } from '../constants';
+import { getApiServerURL } from '../constants';
 
 interface Props {}
 
@@ -11,7 +11,7 @@ export const PricesDistribution = (props: Props) => {
 	const [results, setResults] = useState<Array<Map<string, number>>>();
 
 	useEffect(() => {
-		fetch(`http://${getApiServerDomain()}/api/v1/analytics/prices`)
+		fetch(`${getApiServerURL()}/api/v1/analytics/prices`)
 			.then((response) => {
 				return response.json();
 			})

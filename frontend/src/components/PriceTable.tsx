@@ -21,7 +21,7 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import HTMLTooltip from './HTMLTooltip';
-import { getApiServerDomain } from '../constants';
+import { getApiServerURL } from '../constants';
 import MapIcon from '@mui/icons-material/Map';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
@@ -253,7 +253,7 @@ export const PriceTableEnhanced = (props: Props) => {
 	useEffect(() => {
 		props.location &&
 			fetch(
-				`http://${getApiServerDomain()}/api/v1/gas_stations?near=${
+				`${getApiServerURL()}/api/v1/gas_stations?near=${
 					props.location.longitude
 				},${props.location.latitude}`
 			)
