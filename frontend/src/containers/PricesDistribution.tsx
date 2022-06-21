@@ -1,10 +1,6 @@
 import { Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { AxisBandOptions, AxisOptions, Chart, UserSerie } from 'react-charts';
-import PriceChart, {
-	Datum,
-	PriceEvolutionData,
-} from '../components/PriceChart';
+import { AxisBandOptions, Chart, UserSerie } from 'react-charts';
 import { getApiServerDomain } from '../constants';
 
 interface Props {}

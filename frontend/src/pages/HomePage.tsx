@@ -41,7 +41,7 @@ const HomePage = () => {
 	);
 
 	const adapter = (item) => {
-		const dataparsed: Array<any> = data.reduce((acc: any, curr: any) => {
+		const dataparsed: Array<any> = data?.reduce((acc: any, curr: any) => {
 			if (curr[item])
 				acc.push({
 					x: new Date(curr.date),
