@@ -55,19 +55,21 @@ const HomePage = () => {
 							location={geolocationPosition?.coords}
 						></PriceTableEnhanced>
 					</Box>
-					<Box
-						sx={{
-							flex: 1,
-							padding: '1em',
-						}}
-					>
-						<PriceCalculator data={data} />
-						<h2>Price evolution</h2>
-						<PriceChart
-							key={preferredCarburant}
-							data={adapter(preferredCarburant)}
-						></PriceChart>
-					</Box>
+					{data && (
+						<Box
+							sx={{
+								flex: 1,
+								padding: '1em',
+							}}
+						>
+							<PriceCalculator data={data} />
+							<h2>Price evolution</h2>
+							<PriceChart
+								key={preferredCarburant}
+								data={adapter(preferredCarburant)}
+							></PriceChart>
+						</Box>
+					)}
 				</Box>
 			) : (
 				<Box
