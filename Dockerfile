@@ -15,4 +15,8 @@ FROM base as scrapper
 ENTRYPOINT ["sh", "entrypoint.sh", "scrapper"]
 
 FROM base as app
+RUN apk --no-cache add nodejs yarn --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+WORKDIR /usr/local/app/frontend
+COPY frontend .
+RUN yarn install && yarn build
 ENTRYPOINT ["sh", "entrypoint.sh", "app"]
