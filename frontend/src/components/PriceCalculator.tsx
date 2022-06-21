@@ -47,7 +47,9 @@ const PriceCalculator = (props: Props) => {
 					onChange={(e) => dispatch(changePreferredCarburant(e.target.value))}
 				>
 					{Object.keys(carburantsNamesMap).map((c) => (
-						<MenuItem value={c}>{carburantsNamesMap[c]}</MenuItem>
+						<MenuItem key={c} value={c}>
+							{carburantsNamesMap[c]}
+						</MenuItem>
 					))}
 				</Select>
 			</FormControl>

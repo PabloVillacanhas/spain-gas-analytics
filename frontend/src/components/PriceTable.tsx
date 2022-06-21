@@ -57,10 +57,15 @@ type Row = {
 	calculate: number;
 };
 
-function createData(row: Item, origin: GeolocationCoordinates, payment): Row {
+function createData(
+	row: Item,
+	origin: GeolocationCoordinates,
+	payment,
+	gas_type
+): Row {
 	return {
 		name: row.name,
-		price: row.last_price[0].diesel_a,
+		price: row.last_price[0][gas_type],
 		direction: row.direction,
 		characteristics: `${row.sale_type} ${row.service_type}`,
 		labour_data: row.labour_data,
@@ -72,7 +77,7 @@ function createData(row: Item, origin: GeolocationCoordinates, payment): Row {
 			{ lng: origin.longitude, lat: origin.latitude }
 		),
 		coordinates: `${row.coordinates.geometry.coordinates[0]},${row.coordinates.geometry.coordinates[1]}`,
-		calculate: +(payment / row.last_price[0].diesel_a).toFixed(3),
+		calculate: +(payment / row.last_price[0][gas_type]).toFixed(3),
 	};
 }
 
@@ -246,8 +251,13 @@ export const PriceTableEnhanced = (props: Props) => {
 	const rows = useMemo(
 		() =>
 			data &&
-			data.items?.map((datum) => createData(datum, props.location, payment)),
-		[data, payment]
+			data.items?.map((datum) => {
+				if (datum.last_price[0]?.[preferredCarburant]) {
+					// console.log('datum :>> ', datum);
+					return createData(datum, props.location, payment, preferredCarburant);
+				}
+			}),
+		[data, payment, preferredCarburant]
 	);
 
 	useEffect(() => {
@@ -336,96 +346,103 @@ export const PriceTableEnhanced = (props: Props) => {
 					{rows
 						?.slice()
 						.sort(getComparator(order, orderBy))
-						.map((row, index) => (
-							<TableRow
-								key={index}
-								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-							>
-								<TableCell align='left'>{row.name}</TableCell>
-								<TableCell align='right'>{row.price}</TableCell>
-								<TableCell align='left'>
-									<Box
-										sx={{
-											display: 'flex',
-											alignItems: 'center',
-											cursor: 'pointer',
-										}}
-										onClick={() =>
-											navigate(
-												`/map?location=${row.coordinates.split(',')[0]},${
-													row.coordinates.split(',')[1]
-												}`
-											)
-										}
+						.map(
+							(row, index) =>
+								row && (
+									<TableRow
+										key={index}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
-										{row.direction}
-										<MapIcon sx={{ marginLeft: '0.75rem' }}></MapIcon>
-									</Box>
-								</TableCell>
-								<TableCell align='right'>{`${(row.distance / 1000).toFixed(
-									2
-								)} km`}</TableCell>
-								<TableCell align='left'>
-									{row.characteristics.startsWith('P') ? (
-										<HTMLTooltip title='Public sell' arrow placement='top'>
-											<CheckCircleIcon />
-										</HTMLTooltip>
-									) : (
-										<HTMLTooltip title='Restricted sell' arrow placement='top'>
-											<DoDisturb />
-										</HTMLTooltip>
-									)}
-									{row.characteristics.includes('(P)') && (
-										<Tooltip
-											title={getHTMLServiceTypeTooltip(
-												'Atendido',
-												getServiceSheduleMap(row.characteristics.slice(2)).get(
-													'P'
-												) as any
+										<TableCell align='left'>{row.name}</TableCell>
+										<TableCell align='right'>{row.price}</TableCell>
+										<TableCell align='left'>
+											<Box
+												sx={{
+													display: 'flex',
+													alignItems: 'center',
+													cursor: 'pointer',
+												}}
+												onClick={() =>
+													navigate(
+														`/map?location=${row.coordinates.split(',')[0]},${
+															row.coordinates.split(',')[1]
+														}`
+													)
+												}
+											>
+												{row.direction}
+												<MapIcon sx={{ marginLeft: '0.75rem' }}></MapIcon>
+											</Box>
+										</TableCell>
+										<TableCell align='right'>{`${(row.distance / 1000).toFixed(
+											2
+										)} km`}</TableCell>
+										<TableCell align='left'>
+											{row.characteristics.startsWith('P') ? (
+												<HTMLTooltip title='Public sell' arrow placement='top'>
+													<CheckCircleIcon />
+												</HTMLTooltip>
+											) : (
+												<HTMLTooltip
+													title='Restricted sell'
+													arrow
+													placement='top'
+												>
+													<DoDisturb />
+												</HTMLTooltip>
 											)}
-											arrow
-											placement='top'
-										>
-											<PersonIcon />
-										</Tooltip>
-									)}
-									{row.characteristics.includes('(A)') && (
-										<Tooltip
-											title={getHTMLServiceTypeTooltip(
-												'Autoservicio',
-												getServiceSheduleMap(row.characteristics.slice(2)).get(
-													'A'
-												) as any
+											{row.characteristics.includes('(P)') && (
+												<Tooltip
+													title={getHTMLServiceTypeTooltip(
+														'Atendido',
+														getServiceSheduleMap(
+															row.characteristics.slice(2)
+														).get('P') as any
+													)}
+													arrow
+													placement='top'
+												>
+													<PersonIcon />
+												</Tooltip>
 											)}
-											arrow
-											placement='top'
-										>
-											<LiveHelpIcon />
-										</Tooltip>
-									)}
-									{row.characteristics.includes('(D)') && (
-										<Tooltip
-											title={getHTMLServiceTypeTooltip(
-												'Desatendido',
-												getServiceSheduleMap(row.characteristics.slice(2)).get(
-													'D'
-												) as any
+											{row.characteristics.includes('(A)') && (
+												<Tooltip
+													title={getHTMLServiceTypeTooltip(
+														'Autoservicio',
+														getServiceSheduleMap(
+															row.characteristics.slice(2)
+														).get('A') as any
+													)}
+													arrow
+													placement='top'
+												>
+													<LiveHelpIcon />
+												</Tooltip>
 											)}
-											arrow
-											placement='top'
-										>
-											<PersonOffIcon />
-										</Tooltip>
-									)}
-								</TableCell>
-								<TableCell align='left'>
-									{row.labour_data.split(';').map((v) => (
-										<div>{v}</div>
-									))}
-								</TableCell>
-								<TableCell align='left'>{row.calculate}</TableCell>
-							</TableRow>
-						))}
+											{row.characteristics.includes('(D)') && (
+												<Tooltip
+													title={getHTMLServiceTypeTooltip(
+														'Desatendido',
+														getServiceSheduleMap(
+															row.characteristics.slice(2)
+														).get('D') as any
+													)}
+													arrow
+													placement='top'
+												>
+													<PersonOffIcon />
+												</Tooltip>
+											)}
+										</TableCell>
+										<TableCell align='left'>
+											{row.labour_data.split(';').map((v) => (
+												<div>{v}</div>
+											))}
+										</TableCell>
+										<TableCell align='left'>{row.calculate}</TableCell>
+									</TableRow>
+								)
+						)}
 				</TableBody>
 			</Table>
 		</TableContainer>
