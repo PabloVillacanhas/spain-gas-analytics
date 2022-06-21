@@ -19,4 +19,5 @@ RUN apk --no-cache add nodejs yarn --repository=http://dl-cdn.alpinelinux.org/al
 WORKDIR /usr/local/app/frontend
 COPY frontend .
 RUN yarn install && yarn build
+WORKDIR /usr/local/app/backend
 ENTRYPOINT ["sh", "entrypoint.sh", "app"]
