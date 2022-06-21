@@ -10,6 +10,7 @@ import { PriceEvolutionData } from './PriceChart';
 interface PriceDataCardProps {
 	title: string;
 	data: PriceEvolutionData;
+	highlight?: boolean;
 }
 
 export default function PriceDataCard(props: PriceDataCardProps) {
@@ -24,7 +25,7 @@ export default function PriceDataCard(props: PriceDataCardProps) {
 	return (
 		<Box
 			sx={{
-				bgcolor: 'background.paper',
+				bgcolor: props.highlight ? grey[300] : 'background.paper',
 				boxShadow: 1,
 				borderRadius: 1,
 				p: 2,

@@ -103,6 +103,7 @@ const HomePage = () => {
 							.map((k) => (
 								<PriceBox
 									key={k}
+									highlight={k === preferredCarburant}
 									title={carburantsNamesMap[k]}
 									data={adapter(k)}
 								></PriceBox>
@@ -117,6 +118,7 @@ const HomePage = () => {
 							.map((k) => (
 								<PriceBox
 									key={k}
+									highlight={k === preferredCarburant}
 									title={carburantsNamesMap[k]}
 									data={adapter(k)}
 								></PriceBox>
@@ -136,6 +138,7 @@ const HomePage = () => {
 							.map((k) => (
 								<PriceBox
 									key={k}
+									highlight={k === preferredCarburant}
 									title={carburantsNamesMap[k]}
 									data={adapter(k)}
 								></PriceBox>
