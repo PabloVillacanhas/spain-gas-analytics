@@ -5,7 +5,7 @@ import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
 import CircularProgress from '@mui/material/CircularProgress';
 import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
-import { carburantsNamesMap } from '../constants';
+import { carburantsNamesMap, getApiServerURL } from '../constants';
 import { useGeolocation } from '../hooks';
 import { useLocation } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
@@ -35,12 +35,8 @@ const INITIAL_VIEW_STATE = {
 interface MainMapProps {}
 
 const MainMap = () => {
-	// DeckGL and mapbox will both draw into this WebGL context
-	const [glContext, setGLContext] = useState();
-	const deckRef: React.MutableRefObject<any> = useRef();
-	const mapRef: React.MutableRefObject<any> = useRef();
-
 	const [searchParams] = useSearchParams();
+	const deckRef: React.MutableRefObject<any> = useRef();
 
 	const { geolocationPosition } = useGeolocation();
 
@@ -50,7 +46,6 @@ const MainMap = () => {
 		sellType: [],
 		serviceType: [],
 	});
-	const [mode, setMode] = useState('global');
 	const [layerProps, setLayerProps] = useState({
 		gasstations: {
 			id: 'geojson-layer',
@@ -96,13 +91,14 @@ const MainMap = () => {
 				depthTest: false,
 			},
 			backgroundColor: [200, 200, 200, 150],
+			visible: false,
 		},
 	});
 	const [analitycs, setAnalitycs] = useState<any>();
-	const [showFilters, setShowFilters] = useState<boolean>(false);
+	const [showFilters, setShowFilters] = useState<boolean>(true);
 
 	useEffect(() => {
-		fetch('http://localhost:5001/api/v1/gas_stations')
+		fetch(`${getApiServerURL()}/api/v1/gas_stations`)
 			.then((response) => {
 				return response.json();
 			})
@@ -124,23 +120,8 @@ const MainMap = () => {
 			});
 	}, []);
 
-	const onMapLoad = useCallback(() => {
-		if (mapRef.current && deckRef.current) {
-			const map = mapRef.current.getMap();
-			const deck = deckRef.current.deck;
-			// You must initialize an empty deck.gl layer to prevent flashing
-			map.addLayer(
-				// This id has to match the id of the deck.gl layer
-				new MapboxLayer({ id: 'my-scatterplot', deck })
-				// Optionally define id from Mapbox layer stack under which to add deck layer
-				// 'before-layer-id'
-			);
-		}
-	}, []);
-
-	const getPointColor = (price, gasType) => {
+	const getPointColor = (price, gasType, analitycs) => {
 		const price_diff = price - analitycs[`main_${gasType}`];
-
 		if (
 			price_diff > -analitycs[`std_deviation_${gasType}`] &&
 			price_diff < analitycs[`std_deviation_${gasType}`]
@@ -174,60 +155,28 @@ const MainMap = () => {
 
 	function getStandardDeviation(array) {
 		const n = array.length;
-		const mean = array.reduce((a, b) => a + b) / n;
+		const mean = array.reduce((a, b) => a + b, 0) / n;
 		return Math.sqrt(
-			array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+			array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / n
 		);
 	}
 
-	useEffect(() => {
-		if (analitycs && filter) {
-			const gasstationsLayerProps = {
-				data: {
-					type: 'FeatureCollection',
-					features: results
-						.filter((p) => matchsFilters(p))
-						.map((p) => p.feature),
-				},
-				getFillColor: (d) =>
-					filter &&
-					getPointColor(d.properties.prices[filter.gasType], filter.gasType),
-				getLineColor: (d) =>
-					filter &&
-					getPointColor(d.properties.prices[filter.gasType], filter.gasType),
-			};
-			const pricesLayerProps = {
-				data: results.filter((p) => matchsFilters(p)).map((p) => p.feature),
-				getPosition: (d) => d.geometry.coordinates,
-				getText: (d) => d.properties.prices[filter.gasType].toString() + '€',
-				visible: mode === 'local',
-			};
-			setLayerProps((layers) => ({
-				gasstations: { ...layers.gasstations, ...gasstationsLayerProps },
-				pricesText: { ...layers.pricesText, ...pricesLayerProps },
-			}));
-		}
-	}, [analitycs, filter, mode]);
-
-	const matchsFilters = useCallback(
-		(feature) => {
-			const by_gasType = feature.feature.properties.prices[filter.gasType];
-			const by_serviceType = filter.serviceType.some((type) => {
-				return (
-					feature.feature.properties.service_type?.includes(`(${type})`) ||
-					(type === 'NA' && !feature.feature.properties.service_type)
-				);
-			});
-			const by_sellType = filter.sellType.some(
-				(type) => feature.feature.properties.sale_type === type
-			);
-			return by_gasType && by_serviceType && by_sellType;
-		},
-		[filter]
-	);
+	const matchsFilters = (feature) => {
+		const by_gasType = feature.feature.properties.prices[filter.gasType];
+		// const by_serviceType = filter.serviceType.some((type) => {
+		// 	return (
+		// 		feature.feature.properties.service_type?.includes(`(${type})`) ||
+		// 		(type === 'NA' && !feature.feature.properties.service_type)
+		// 	);
+		// });
+		const by_sellType = filter.sellType.some(
+			(type) => feature.feature.properties.sale_type === type
+		);
+		return by_gasType && by_sellType;
+	};
 
 	useEffect(() => {
-		if (results && filter) {
+		if (results) {
 			let newAnalitycs = {};
 			Object.keys(carburantsNamesMap).forEach((type) => {
 				const main =
@@ -245,13 +194,44 @@ const MainMap = () => {
 				newAnalitycs[`std_deviation_${type}`] = stdDeviation;
 			});
 			setAnalitycs({ ...analitycs, ...newAnalitycs });
+			const gasstationsLayerProps = {
+				data: {
+					type: 'FeatureCollection',
+					features: results
+						.filter((p) => matchsFilters(p))
+						.map((p) => p.feature),
+				},
+				getFillColor: (d) =>
+					getPointColor(
+						d.properties.prices[filter.gasType],
+						filter.gasType,
+						newAnalitycs
+					),
+				getLineColor: (d) =>
+					getPointColor(
+						d.properties.prices[filter.gasType],
+						filter.gasType,
+						newAnalitycs
+					),
+			};
+			const pricesLayerProps = {
+				data: results.filter((p) => matchsFilters(p)).map((p) => p.feature),
+				getPosition: (d) => d.geometry.coordinates,
+				getText: (d) => d.properties.prices[filter.gasType].toString() + '€',
+				visible: deckRef.current?.deck.viewState.zoom,
+			};
+			setLayerProps({
+				gasstations: { ...layerProps.gasstations, ...gasstationsLayerProps },
+				pricesText: { ...layerProps.pricesText, ...pricesLayerProps },
+			});
 		}
 	}, [results, filter]);
 
 	return (
 		<div
 			style={{
-				overflow: 'hidden',
+				// overflow: 'hidden',
+				position: 'relative',
 				height: '100%',
 				width: '100%',
 			}}
@@ -270,7 +250,13 @@ const MainMap = () => {
 					new TextLayer(layerProps.pricesText),
 				]}
 				onViewStateChange={({ viewState }) =>
-					viewState.zoom > 11 ? setMode('local') : setMode('global')
+					setLayerProps({
+						...layerProps,
+						pricesText: {
+							...layerProps.pricesText,
+							visible: viewState.zoom > 11 ? true : false,
+						},
+					})
 				}
 				initialViewState={{
 					...INITIAL_VIEW_STATE,
@@ -294,7 +280,6 @@ const MainMap = () => {
 						: {}),
 				}}
 				controller={true}
-				onWebGLInitialized={setGLContext}
 				glOptions={{
 					stencil: true,
 				}}
@@ -311,39 +296,35 @@ const MainMap = () => {
 					}
 				}}
 			>
-				{glContext && (
-					<StaticMap
-						ref={mapRef}
-						gl={glContext}
-						mapStyle='mapbox://styles/mapbox/streets-v11'
-						mapboxApiAccessToken={MAPBOX_TOKEN}
-						onLoad={onMapLoad}
-					/>
-				)}
-				{showFilters && (
-					<MapFilterGasStations
-						onFilterChange={(filter: MapFilterParams) => setFilter(filter)}
-					></MapFilterGasStations>
-				)}
-				{!results && (
-					<IconButton
-						color='primary'
-						size='large'
-						style={{
-							position: 'absolute',
-							bottom: '1em',
-							left: '1em',
-							zIndex: 1,
-							backgroundColor: `${showFilters ? 'blue' : 'white'}`,
-							color: `${showFilters ? 'white' : 'blue'}`,
-						}}
-						onClick={(e) => {
-							e.stopPropagation();
-							setShowFilters(!showFilters);
-						}}
-					>
-						<FilterAltIcon />
-					</IconButton>
+				<StaticMap
+					mapStyle='mapbox://styles/mapbox/streets-v11'
+					mapboxApiAccessToken={MAPBOX_TOKEN}
+				/>
+
+				{results && (
+					<>
+						{showFilters && (
+							<MapFilterGasStations
+								onFilterChange={(filter: MapFilterParams) => {
+									setFilter(filter);
+								}}
+							></MapFilterGasStations>
+						)}
+						<IconButton
+							color='primary'
+							size='large'
+							style={{
+								position: 'absolute',
+								bottom: '1em',
+								left: '1em',
+								zIndex: 1,
+								backgroundColor: 'white',
+							}}
+							onClick={() => setShowFilters(!showFilters)}
+						>
+							<FilterAltIcon />
+						</IconButton>
+					</>
 				)}
 			</DeckGL>
 		</div>
