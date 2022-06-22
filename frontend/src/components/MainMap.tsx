@@ -334,9 +334,13 @@ const MainMap = () => {
 							bottom: '1em',
 							left: '1em',
 							zIndex: 1,
-							backgroundColor: 'white',
+							backgroundColor: `${showFilters ? 'blue' : 'white'}`,
+							color: `${showFilters ? 'white' : 'blue'}`,
 						}}
-						onClick={() => setShowFilters(true)}
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowFilters(!showFilters);
+						}}
 					>
 						<FilterAltIcon />
 					</IconButton>
