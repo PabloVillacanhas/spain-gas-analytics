@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+	autocompleteClasses,
 	Box,
 	Checkbox,
 	FormControlLabel,
@@ -68,7 +69,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 				display: 'flex',
 				backgroundColor: 'rgb(255 255 255 / 65%)',
 				maxWidth: '75%',
-				margin: '64px auto',
+				margin: '0 auto',
 				borderRadius: '4px',
 			}}
 		>
@@ -117,7 +118,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 					})}
 				</Select>
 			</FormControl>
-			<FormControl>
+			{/* <FormControl>
 				<InputLabel id='serviceType-label'>Service type</InputLabel>
 				<Select
 					labelId='serviceType-multiple-checkbox-label'
@@ -146,7 +147,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 						);
 					})}
 				</Select>
-			</FormControl>
+			</FormControl> */}
 			{/* <FormGroup sx={{ zIndex: 1, justifyContent: 'center' }}>
 				<FormControlLabel
 					control={<Checkbox defaultChecked />}

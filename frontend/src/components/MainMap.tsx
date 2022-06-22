@@ -36,6 +36,7 @@ interface MainMapProps {}
 
 const MainMap = () => {
 	const [searchParams] = useSearchParams();
+	const deckRef: React.MutableRefObject<any> = useRef();
 
 	const { geolocationPosition } = useGeolocation();
 
@@ -217,6 +218,7 @@ const MainMap = () => {
 				data: results.filter((p) => matchsFilters(p)).map((p) => p.feature),
 				getPosition: (d) => d.geometry.coordinates,
 				getText: (d) => d.properties.prices[filter.gasType].toString() + '€',
+				visible: deckRef.current?.deck.viewState.zoom,
 			};
 			setLayerProps({
 				gasstations: { ...layerProps.gasstations, ...gasstationsLayerProps },
@@ -225,11 +227,11 @@ const MainMap = () => {
 		}
 	}, [results, filter]);
 
-	console.log('layerProps', layerProps);
 	return (
 		<div
 			style={{
-				overflow: 'hidden',
+				// overflow: 'hidden',
+				position: 'relative',
 				height: '100%',
 				width: '100%',
 			}}
@@ -242,6 +244,7 @@ const MainMap = () => {
 				</div>
 			)}
 			<DeckGL
+				ref={deckRef}
 				layers={[
 					new GeoJsonLayer(layerProps.gasstations),
 					new TextLayer(layerProps.pricesText),
@@ -300,11 +303,13 @@ const MainMap = () => {
 
 				{results && (
 					<>
-						<MapFilterGasStations
-							onFilterChange={(filter: MapFilterParams) => {
-								setFilter(filter);
-							}}
-						></MapFilterGasStations>
+						{showFilters && (
+							<MapFilterGasStations
+								onFilterChange={(filter: MapFilterParams) => {
+									setFilter(filter);
+								}}
+							></MapFilterGasStations>
+						)}
 						<IconButton
 							color='primary'
 							size='large'
@@ -315,7 +320,7 @@ const MainMap = () => {
 								zIndex: 1,
 								backgroundColor: 'white',
 							}}
-							onClick={() => setShowFilters(true)}
+							onClick={() => setShowFilters(!showFilters)}
 						>
 							<FilterAltIcon />
 						</IconButton>
