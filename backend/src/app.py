@@ -16,7 +16,6 @@ def create_app():
     CORS(app)
     load_dotenv()
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-
     # app.config.from_object(settings_module)
 
     logging.basicConfig()
@@ -33,7 +32,6 @@ def create_app():
     app.url_map.strict_slashes = False
 
     # Registra los blueprints
-
     app.register_blueprint(gasstations_v1_bp)
 
     # Registra manejadores de errores personalizados
