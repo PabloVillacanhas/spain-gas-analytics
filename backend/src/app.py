@@ -4,10 +4,11 @@ import os
 from dotenv.main import load_dotenv
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
+from flask_cors import CORS
 from flask_restful import Api
+
 import extensions
 from resources import gasstations_v1_bp
-from flask_cors import CORS
 
 
 def create_app():
