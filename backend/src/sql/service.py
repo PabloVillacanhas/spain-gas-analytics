@@ -38,8 +38,9 @@ def get(gas_station_id):
 
 
 def get_all():
-    result = db.session.query(GasStation).join(Prices) \
+    result = db.session.query(GasStation)\
         .filter(and_(GasStation.coordinates != None, GasStation.prices != None))
+    print(result)
     db.session.commit()
     return result.all()
 

@@ -1,8 +1,12 @@
+import time
+
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 
-from schemas import GasStationSchema, PricesSchema, GasStationSchemaQuery, GasStationSchemaPagination
-from sql.service import get, get_all, get_price_evolution, get_prices, find_closest_gasstations
+from schemas import (GasStationSchema, GasStationSchemaPagination,
+                     GasStationSchemaQuery, PricesSchema)
+from sql.service import (find_closest_gasstations, get, get_all,
+                         get_price_evolution, get_prices)
 
 gasstations_v1_bp = Blueprint('gasstations_v1_0_bp', __name__)
 api = Api(gasstations_v1_bp)
@@ -21,11 +25,13 @@ class GasStationResource(Resource):
     def get(self, gas_station_id):
         gs = get(gas_station_id)
         result = gas_station_schema.dump(gs)
+
         return result
 
 
 class GasStationsResource(Resource):
     def get(self):
+        start_time = time.time()
         gasstation_schema_query.validate(request.args)
         if len(request.args):
             gs = find_closest_gasstations(
@@ -34,6 +40,7 @@ class GasStationsResource(Resource):
         else:
             gs = get_all()
             result = min_gas_stations_schema.dump(gs)
+        print("--- %s seconds ---" % (time.time() - start_time))
         return result
 
 
