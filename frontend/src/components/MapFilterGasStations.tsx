@@ -84,7 +84,9 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 					onChange={handleChange}
 				>
 					{Object.keys(carburantsNamesMap).map((c) => (
-						<MenuItem value={c}>{carburantsNamesMap[c]}</MenuItem>
+						<MenuItem key={c} value={c}>
+							{carburantsNamesMap[c]}
+						</MenuItem>
 					))}
 				</Select>
 			</FormControl>
