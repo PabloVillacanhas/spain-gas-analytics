@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { MapboxLayer } from '@deck.gl/mapbox';
-import { StaticMap } from 'react-map-gl';
-import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
+import DeckGL from '@deck.gl/react';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CircularProgress from '@mui/material/CircularProgress';
-import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
+import IconButton from '@mui/material/IconButton';
+import React, { useEffect, useRef, useState } from 'react';
+import { StaticMap } from 'react-map-gl';
+import { useSearchParams } from 'react-router-dom';
 import { carburantsNamesMap, getApiServerURL } from '../constants';
 import { useGeolocation } from '../hooks';
-import { useLocation } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import IconButton from '@mui/material/IconButton';
-import { borderColor } from '@mui/system';
+import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -31,8 +28,6 @@ const INITIAL_VIEW_STATE = {
 	width: 1033,
 	zoom: 5.67760421641584,
 };
-
-interface MainMapProps {}
 
 const MainMap = () => {
 	const [searchParams] = useSearchParams();
@@ -94,7 +89,7 @@ const MainMap = () => {
 			visible: false,
 		},
 	});
-	const [analitycs, setAnalitycs] = useState<any>();
+	// const [analitycs, setAnalitycs] = useState<any>();
 	const [showFilters, setShowFilters] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -120,7 +115,7 @@ const MainMap = () => {
 			});
 	}, []);
 
-	const getPointColor = (price, gasType, analitycs) => {
+	const getColor = (price, gasType, analitycs) => {
 		const price_diff = price - analitycs[`main_${gasType}`];
 		if (
 			price_diff > -analitycs[`std_deviation_${gasType}`] &&
@@ -177,7 +172,7 @@ const MainMap = () => {
 
 	useEffect(() => {
 		if (results) {
-			let newAnalitycs = {};
+			let analitycs = {};
 			Object.keys(carburantsNamesMap).forEach((type) => {
 				const main =
 					results.reduce((acc, curr) => {
@@ -190,10 +185,15 @@ const MainMap = () => {
 						.filter((f) => matchsFilters(f))
 						.map((f) => f.feature.properties.prices[type])
 				);
-				newAnalitycs[`main_${type}`] = main;
-				newAnalitycs[`std_deviation_${type}`] = stdDeviation;
+				analitycs[`main_${type}`] = main;
+				analitycs[`std_deviation_${type}`] = stdDeviation;
 			});
-			setAnalitycs({ ...analitycs, ...newAnalitycs });
+			const getFeatureColor = (d) =>
+				getColor(
+					d.properties.prices[filter.gasType],
+					filter.gasType,
+					analitycs
+				);
 			const gasstationsLayerProps = {
 				data: {
 					type: 'FeatureCollection',
@@ -201,18 +201,8 @@ const MainMap = () => {
 						.filter((p) => matchsFilters(p))
 						.map((p) => p.feature),
 				},
-				getFillColor: (d) =>
-					getPointColor(
-						d.properties.prices[filter.gasType],
-						filter.gasType,
-						newAnalitycs
-					),
-				getLineColor: (d) =>
-					getPointColor(
-						d.properties.prices[filter.gasType],
-						filter.gasType,
-						newAnalitycs
-					),
+				getFillColor: getFeatureColor,
+				getLineColor: getFeatureColor,
 			};
 			const pricesLayerProps = {
 				data: results.filter((p) => matchsFilters(p)).map((p) => p.feature),
@@ -305,11 +295,10 @@ const MainMap = () => {
 					<>
 						{showFilters && (
 							<MapFilterGasStations
-								onFilterChange={(filter: MapFilterParams) => {
-									setFilter(filter);
-								}}
+								onFilterChange={setFilter}
 							></MapFilterGasStations>
 						)}
+						√
 						<IconButton
 							color='primary'
 							size='large'

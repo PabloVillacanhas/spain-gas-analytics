@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import {
-	autocompleteClasses,
 	Box,
 	Checkbox,
-	FormControlLabel,
-	FormGroup,
 	ListItemText,
 	MenuItem,
 	OutlinedInput,
@@ -12,6 +8,7 @@ import {
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import React, { useEffect, useState } from 'react';
 import { carburantsNamesMap } from '../constants';
 
 const MenuProps = {
