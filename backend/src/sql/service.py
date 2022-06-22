@@ -1,16 +1,17 @@
 from datetime import datetime
 from typing import List
 
+from extensions import db
+from geoalchemy2.elements import WKTElement
+from geoalchemy2.types import Geography
+from sqlalchemy import func
+from sqlalchemy.sql import cast
 from sqlalchemy.sql.elements import and_
 from sqlalchemy.sql.operators import desc_op
-from sqlalchemy import func
-from geoalchemy2.elements import WKTElement
 
 from sql.models import GasStation, Prices
-from . import db
+
 from .views import PriceEvolutionView
-from geoalchemy2.types import Geography
-from sqlalchemy.sql import cast
 
 
 def persist(gas_stations: List[GasStation]):

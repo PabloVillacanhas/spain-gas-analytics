@@ -1,3 +1,10 @@
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+# db = None
+
+# def createDB(app):
+# 	global db
+# 	print('aaaaaaa')
+# 	if db == None:
+#  		db = SQLAlchemy(app)
+# 	return db	

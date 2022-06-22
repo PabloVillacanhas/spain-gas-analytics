@@ -1,6 +1,5 @@
 #!/bin/sh
 
-b="app"
 cd src
 
 echo $PORT

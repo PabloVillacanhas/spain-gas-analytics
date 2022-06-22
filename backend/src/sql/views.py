@@ -1,4 +1,4 @@
-from . import db
+from extensions import db
 
 
 # create view prices_evolution as select date, avg(biodiesel) as biodiesel, avg(bioethanol) as bioethanol, avg(compressed_natgas) as compressed_natgas, avg(liq_natgas) as liq_natgas, avg(liq_gas_from_oil) as liq_gas_from_oil, avg(diesel_a) as diesel_a, avg(diesel_b) as diesel_b, avg(diesel_prem) as diesel_prem, avg(gasoline_95e10) as gasoline_95e10, avg(gasoline_95e5) as gasoline_95e5, avg(gasoline_95e5prem) as gasoline_95e5prem, avg(gasoline_98e10) as gasoline_98e10, avg(gasoline_98e5) as gasoline_98e5, avg(h) as h from prices group by date;

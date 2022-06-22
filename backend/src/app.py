@@ -4,10 +4,11 @@ import os
 from dotenv.main import load_dotenv
 from flask import Flask, jsonify
 from flask.helpers import send_from_directory
+from flask_cors import CORS
 from flask_restful import Api
+
 import extensions
 from resources import gasstations_v1_bp
-from flask_cors import CORS
 
 
 def create_app():
@@ -15,6 +16,7 @@ def create_app():
     CORS(app)
     load_dotenv()
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
     # app.config.from_object(settings_module)
 
     logging.basicConfig()
@@ -31,6 +33,7 @@ def create_app():
     app.url_map.strict_slashes = False
 
     # Registra los blueprints
+
     app.register_blueprint(gasstations_v1_bp)
 
     # Registra manejadores de errores personalizados

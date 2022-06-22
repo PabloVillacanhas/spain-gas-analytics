@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from geoalchemy2.types import Geometry
 from datetime import datetime
-from . import db
+
+from extensions import db
+from geoalchemy2.types import Geometry
 
 
 @dataclass
