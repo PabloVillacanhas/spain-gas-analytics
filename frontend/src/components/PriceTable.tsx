@@ -1,30 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DoDisturb from '@mui/icons-material/DoDisturb';
+import MapIcon from '@mui/icons-material/Map';
 import {
-	TableContainer,
+	Box,
 	Paper,
 	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
 	TableHead,
 	TableRow,
-	TableCell,
-	TableBody,
-	Box,
 	TableSortLabel,
-	Tooltip,
 	Typography,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import haversine from 'haversine-distance';
-import DoDisturb from '@mui/icons-material/DoDisturb';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PersonOffIcon from '@mui/icons-material/PersonOff';
-import PersonIcon from '@mui/icons-material/Person';
-import LiveHelpIcon from '@mui/icons-material/LiveHelp';
-import HTMLTooltip from './HTMLTooltip';
-import { getApiServerURL } from '../constants';
-import MapIcon from '@mui/icons-material/Map';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { getApiServerURL } from '../constants';
 import { RootState } from '../store';
+import HTMLTooltip from './HTMLTooltip';
 
 type Item = {
 	coordinates: {
@@ -43,7 +39,7 @@ type Item = {
 	];
 	name: 'CEPSA';
 	sale_type: 'P';
-	service_type: 'L-V: 07:00-23:00 (P); S-D: 08:00-23:00 (P)';
+	service_type: 'A' | 'P' | 'D';
 };
 
 type Row = {
@@ -67,7 +63,7 @@ function createData(
 		name: row.name,
 		price: row.last_price[0][gas_type],
 		direction: row.direction,
-		characteristics: `${row.sale_type} ${row.service_type}`,
+		characteristics: `${row.sale_type} (${row.service_type})`,
 		labour_data: row.labour_data,
 		distance: haversine(
 			{
@@ -253,7 +249,6 @@ export const PriceTableEnhanced = (props: Props) => {
 			data &&
 			data.items?.map((datum) => {
 				if (datum.last_price[0]?.[preferredCarburant]) {
-					// console.log('datum :>> ', datum);
 					return createData(datum, props.location, payment, preferredCarburant);
 				}
 			}),
@@ -274,44 +269,6 @@ export const PriceTableEnhanced = (props: Props) => {
 	}, [props.location, preferredCarburant]);
 
 	type TimetableService = Map<'A' | 'P' | 'D', Map<string, string[]>>;
-
-	const getServiceSheduleMap = useCallback((service_type): TimetableService => {
-		const timetableService: TimetableService = new Map();
-		var by_day = service_type.split(';');
-		by_day?.forEach((day: string) => {
-			const dayKey = day.split(': ')[0];
-			const dayContent = day.split(': ')[1].split(',');
-			dayContent.forEach((type: string) => {
-				const serviceType = type.slice(-2, -1) as 'A' | 'P' | 'D';
-				const serviceSchedule = type.slice(0, -3);
-				if (!timetableService.get(serviceType)) {
-					timetableService.set(
-						serviceType,
-						new Map().set(dayKey, [serviceSchedule])
-					);
-				} else {
-					if (!timetableService.get(serviceType)?.get(dayKey))
-						timetableService.set(
-							serviceType,
-							(timetableService.get(serviceType) as any).set(dayKey, [
-								serviceSchedule,
-							])
-						);
-					else {
-						const schedule = timetableService
-							.get(serviceType)
-							?.get(dayKey)
-							?.concat([serviceSchedule]);
-						timetableService.set(
-							serviceType,
-							(timetableService.get(serviceType) as any).set(dayKey, schedule)
-						);
-					}
-				}
-			});
-		});
-		return timetableService;
-	}, []);
 
 	const getHTMLServiceTypeTooltip = (
 		title: string,
@@ -391,48 +348,21 @@ export const PriceTableEnhanced = (props: Props) => {
 													<DoDisturb />
 												</HTMLTooltip>
 											)}
-											{row.characteristics.includes('(P)') && (
-												<Tooltip
-													title={getHTMLServiceTypeTooltip(
-														'Atendido',
-														getServiceSheduleMap(
-															row.characteristics.slice(2)
-														).get('P') as any
-													)}
-													arrow
-													placement='top'
-												>
+											{/* {row.characteristics.includes('(P)') && (
+												<HTMLTooltip title='Atendido' arrow placement='top'>
 													<PersonIcon />
-												</Tooltip>
+												</HTMLTooltip>
 											)}
 											{row.characteristics.includes('(A)') && (
-												<Tooltip
-													title={getHTMLServiceTypeTooltip(
-														'Autoservicio',
-														getServiceSheduleMap(
-															row.characteristics.slice(2)
-														).get('A') as any
-													)}
-													arrow
-													placement='top'
-												>
+												<HTMLTooltip title='Autoservicio' arrow placement='top'>
 													<LiveHelpIcon />
-												</Tooltip>
+												</HTMLTooltip>
 											)}
 											{row.characteristics.includes('(D)') && (
-												<Tooltip
-													title={getHTMLServiceTypeTooltip(
-														'Desatendido',
-														getServiceSheduleMap(
-															row.characteristics.slice(2)
-														).get('D') as any
-													)}
-													arrow
-													placement='top'
-												>
+												<HTMLTooltip title='Desatendido' arrow placement='top'>
 													<PersonOffIcon />
-												</Tooltip>
-											)}
+												</HTMLTooltip>
+											)} */}
 										</TableCell>
 										<TableCell align='left'>
 											{row.labour_data.split(';').map((v) => (
