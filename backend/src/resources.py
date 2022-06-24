@@ -3,6 +3,7 @@ import time
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 
+from extensions import cache
 from schemas import (GasStationSchema, GasStationSchemaPagination,
                      GasStationSchemaQuery, PricesSchema)
 from sql.service import (find_closest_gasstations, get, get_all,
@@ -30,6 +31,7 @@ class GasStationResource(Resource):
 
 
 class GasStationsResource(Resource):
+    @cache.cached(timeout=50)
     def get(self):
         start_time = time.time()
         gasstation_schema_query.validate(request.args)

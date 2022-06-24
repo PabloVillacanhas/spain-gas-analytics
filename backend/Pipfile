@@ -24,6 +24,7 @@ marshmallow-sqlalchemy = "*"
 gunicorn = "*"
 python-dotenv = "*"
 flask-cors = "*"
+flask-caching = "*"
 
 [requires]
 python_version = "*"

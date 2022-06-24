@@ -16,7 +16,6 @@ def create_app():
     CORS(app)
     load_dotenv()
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-    # app.config.from_object(settings_module)
 
     logging.basicConfig()
     logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
@@ -24,6 +23,7 @@ def create_app():
     # Inicializa las extensiones
     extensions.ma.init_app(app)
     extensions.db.init_app(app)
+    extensions.cache.init_app(app)
 
     # Captura todos los errores 404
     Api(app, catch_all_404s=True)
