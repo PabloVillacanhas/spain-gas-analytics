@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { MapboxLayer } from '@deck.gl/mapbox';
-import { StaticMap } from 'react-map-gl';
-import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
+import DeckGL from '@deck.gl/react';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CircularProgress from '@mui/material/CircularProgress';
-import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
+import IconButton from '@mui/material/IconButton';
+import React, { useEffect, useRef, useState } from 'react';
+import { StaticMap } from 'react-map-gl';
+import { useSearchParams } from 'react-router-dom';
 import { carburantsNamesMap, getApiServerURL } from '../constants';
 import { useGeolocation } from '../hooks';
-import { useLocation } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import IconButton from '@mui/material/IconButton';
-import { borderColor } from '@mui/system';
+import { MapFilterGasStations, MapFilterParams } from './MapFilterGasStations';
 
 const MAPBOX_TOKEN =
 	'pk.eyJ1IjoicGFibG91dmUiLCJhIjoiY2thZ2swZ3FyMDdhbzMwbzBhcjJyMGN1NSJ9.seD7xemUdt9UPOyqiFuJcA';
@@ -300,7 +297,11 @@ const MainMap = () => {
 					mapStyle='mapbox://styles/mapbox/streets-v11'
 					mapboxApiAccessToken={MAPBOX_TOKEN}
 				/>
-
+				<MapFilterGasStations
+					onFilterChange={(filter: MapFilterParams) => {
+						setFilter(filter);
+					}}
+				></MapFilterGasStations>
 				{results && (
 					<>
 						{showFilters && (

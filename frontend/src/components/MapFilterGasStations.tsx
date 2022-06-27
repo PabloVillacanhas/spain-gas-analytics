@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {
-	autocompleteClasses,
-	Box,
-	Checkbox,
-	FormControlLabel,
-	FormGroup,
-	ListItemText,
-	MenuItem,
-	OutlinedInput,
-} from '@mui/material';
+import { Box, MenuItem, useTheme } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import React, { useEffect, useState } from 'react';
 import { carburantsNamesMap } from '../constants';
 
 const MenuProps = {
@@ -43,6 +35,8 @@ interface Props {
 }
 
 export const MapFilterGasStations = ({ onFilterChange }: Props) => {
+	const theme = useTheme();
+
 	const [filter, setFilter] = useState<MapFilterParams>({
 		gasType: 'diesel_a',
 		sellType: Object.keys(sellType),
@@ -67,12 +61,26 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 		<Box
 			sx={{
 				display: 'flex',
+				flexDirection: 'column',
 				backgroundColor: 'rgb(255 255 255 / 65%)',
-				maxWidth: '75%',
-				margin: '0 auto',
+				maxWidth: '25%',
+				margin: '1em 0 0 1em',
 				borderRadius: '4px',
 			}}
 		>
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					backgroundColor: theme.palette.primary.main,
+					borderRadius: '4px 4px  0 0 ',
+					color: theme.palette.primary.contrastText,
+				}}
+			>
+				<Typography variant='h6' noWrap component='div' sx={{ padding: '4px' }}>
+					Filters
+				</Typography>
+			</Box>
 			<FormControl>
 				<InputLabel id='gasttype-select-label'>Gas type</InputLabel>
 				<Select
@@ -90,7 +98,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 					))}
 				</Select>
 			</FormControl>
-			<FormControl>
+			{/* <FormControl>
 				<InputLabel id='sellType-label'>Sell type</InputLabel>
 				<Select
 					labelId='sellType-multiple-checkbox-label'
@@ -119,7 +127,7 @@ export const MapFilterGasStations = ({ onFilterChange }: Props) => {
 						);
 					})}
 				</Select>
-			</FormControl>
+			</FormControl> */}
 			{/* <FormControl>
 				<InputLabel id='serviceType-label'>Service type</InputLabel>
 				<Select
